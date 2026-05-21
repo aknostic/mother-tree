@@ -59,7 +59,7 @@ See [docs/inspirations.md](docs/inspirations.md) for the real practitioners whos
 
 ## Models
 
-Mother Tree's model selection policy favors European open-source LLMs. The core pipeline runs on Scaleway: Qwen 3.5 397B for deep extraction and bot conversations, Mistral Small 3.2 for classification, and Devstral 2 123B / Llama 3.3 70B / Gemma 3 27B as independent scoring judges. Anthropic Claude (Haiku for triage, Sonnet for arbitration) is used only when the scoring judges disagree — the rest of the platform runs without it. Embeddings use BGE Multilingual Gemma2.
+Mother Tree's model selection policy favors European open-source LLMs. Extraction, classification, scoring, and embeddings run on Scaleway: Qwen 3.5 397B for deep extraction, Mistral Small 3.2 for classification, Devstral 2 123B / Llama 3.3 70B / Gemma 3 27B as independent scoring judges, and BGE Multilingual Gemma2 for embeddings. Anthropic Claude is used for certain interactive and synthesis steps. All model choices are configurable per environment variable — see [`jobs/mothertree/config.py`](jobs/mothertree/config.py).
 
 See [docs/model-selection-policy.md](docs/model-selection-policy.md) for the full policy and selection rationale.
 
