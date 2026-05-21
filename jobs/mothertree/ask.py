@@ -9,26 +9,15 @@ from mothertree.intelligence import format_context_for_prompt, gather_context
 from mothertree.llm import chat_conversation, generate
 
 PERSONAS = {
-    "seth": (
-        "You are Seth Godin. Be direct, concise, useful. Answer based only on the data provided."
+    "saga": (
+        "You are Saga. You are the positioning strategist for a consultative sales "
+        "network. Speak in terms of story, tribe, and the change worth making. "
+        "Be direct, concise, useful. Answer based only on the data provided."
     ),
-    "lawrence": (
-        "You are Lawrence M. Miller, consultative selling expert with 35+ years of experience "
-        "selling multi-million dollar consulting contracts. You teach 'selling in the spirit of service' — "
-        "selling is shared problem-solving, not pitching.\n\n"
-        "Your framework:\n"
-        "1. CHARACTER: Trust, responsibility, dedication, empathy, discipline. Be a reliable business advisor.\n"
-        "2. THE PROCESS: Build personal brand, know your product and competition, build network. "
-        "Sales funnel as dating stages — awareness, interest, commitment, marriage.\n"
-        "3. THE CONSULTATIVE CONVERSATION: First impression (likeability). Small talk to business talk. "
-        "Probe for problem definition. Situation analysis. Root cause analysis. Co-create solutions. "
-        "Value proposition. Proposal. Proof and references. Close. Handle objections.\n"
-        "4. COMMUNICATION SKILLS: Open-ended questions, reflective listening, empathy statements, "
-        "body language, acknowledging silence.\n"
-        "5. SERVICE THE SALE: Follow-up, quality control. The easiest sale is the next one with an existing client.\n\n"
-        "You believe anxiety disappears when you genuinely serve. You speak from decades of real experience "
-        "selling to Shell, Texaco, and major corporations. You're warm, practical, and direct. "
-        "You care about the human relationship, not just the technique."
+    "lena": (
+        "You are Lena. You are the consultative diagnostician for a consultative "
+        "sales network. Ask the question the buyer hasn't asked themselves. "
+        "Be direct, concise, useful. Answer based only on the data provided."
     ),
     "onboarding": (
         "Write the foundational instruction a new team member receives on day one. "
@@ -44,7 +33,7 @@ PERSONAS = {
 def ask(persona: str, question: str, user_name: str = "you", user_id: str = None) -> str:
     """Ask the central intelligence. Returns the response text.
 
-    persona: 'seth', 'lawrence', 'trainer', 'onboarding', or None (mothertree default)
+    persona: 'saga', 'lena', 'trainer', 'onboarding', or None (mothertree default)
     question: the question text (empty for onboarding)
     user_name: who's asking (for personalization)
     user_id: slack user id (for trainer enrollment check)
@@ -60,7 +49,7 @@ def ask(persona: str, question: str, user_name: str = "you", user_id: str = None
 
     elif persona in PERSONAS:
         system = PERSONAS[persona]
-        if persona == "lawrence":
+        if persona == "lena":
             user_prompt = f"{user_name} asks: {question}\n\nHere is what their company offers (from the central intelligence):\n{context}"
         else:
             user_prompt = f"{user_name} asks: {question}\n\nCentral intelligence:\n{context}"
@@ -74,7 +63,7 @@ def ask(persona: str, question: str, user_name: str = "you", user_id: str = None
 
 
 def _trainer_consensus(question: str, context: str, user_name: str, user_id: str = None) -> str:
-    """Generate a training response as consensus between Seth and Lawrence.
+    """Generate a training response as consensus between Saga and Lena.
 
     Both answer independently, then a synthesis merges them into one voice.
     """
@@ -98,18 +87,18 @@ def _trainer_consensus(question: str, context: str, user_name: str, user_id: str
             f"The trainee's name is {user_name}. Address them directly."
         )
 
-    # Step 1: Seth's perspective
-    seth_prompt = (
+    # Step 1: Saga's perspective
+    saga_prompt = (
         f"{exercise_type}\n\n"
         f"{topic}\n\n"
         f"Focus on your marketing framework: the change, the worldview, the story, the smallest viable audience. "
         f"How does this training moment connect to how we position ourselves?\n\n"
         f"Central intelligence:\n{context}"
     )
-    seth_response = generate(PERSONAS["seth"] + "\n\nYou are co-training with Lawrence Miller (consultative selling). Give your perspective — Seth's angle.", seth_prompt)
+    saga_response = generate(PERSONAS["saga"] + "\n\nYou are co-training with Lena (consultative diagnosis). Give your perspective — Saga's angle.", saga_prompt)
 
-    # Step 2: Lawrence's perspective
-    lawrence_prompt = (
+    # Step 2: Lena's perspective
+    lena_prompt = (
         f"{exercise_type}\n\n"
         f"{topic}\n\n"
         f"Focus on your consultative selling framework: the consultative conversation, "
@@ -117,20 +106,20 @@ def _trainer_consensus(question: str, context: str, user_name: str, user_id: str
         f"How does this training moment prepare someone for a real conversation?\n\n"
         f"Central intelligence:\n{context}"
     )
-    lawrence_response = generate(PERSONAS["lawrence"] + "\n\nYou are co-training with Seth Godin (marketing). Give your perspective — Lawrence's angle.", lawrence_prompt)
+    lena_response = generate(PERSONAS["lena"] + "\n\nYou are co-training with Saga (positioning strategy). Give your perspective — Lena's angle.", lena_prompt)
 
     # Step 3: Synthesize into one training response
     synthesis_prompt = (
         f"Two expert trainers have each given their perspective on a training exercise for {user_name}.\n\n"
-        f"SETH GODIN (marketing framework) says:\n{seth_response}\n\n"
-        f"LAWRENCE MILLER (consultative selling) says:\n{lawrence_response}\n\n"
+        f"SAGA (positioning framework) says:\n{saga_response}\n\n"
+        f"LENA (consultative diagnosis) says:\n{lena_response}\n\n"
         f"Synthesize these into ONE coherent training response. Rules:\n"
         f"- Deliver one exercise, not two separate ones\n"
         f"- Where they agree, present it as the unified answer\n"
         f"- Where one adds something the other doesn't cover, include it naturally\n"
         f"- Attribute when it adds value: 'From a marketing perspective...' or 'In the conversation itself...'\n"
-        f"- If one perspective dominates (e.g., a selling scenario is 90% Lawrence), let it — "
-        f"but ensure Seth's framing is present\n"
+        f"- If one perspective dominates (e.g., a selling scenario is 90% Lena), let it — "
+        f"but ensure Saga's framing is present\n"
         f"- Address {user_name} directly. Be warm, practical, direct.\n"
         f"- The result should feel like one trainer who understands both marketing and selling, "
         f"not two people arguing."
@@ -177,7 +166,7 @@ normal conversation words.
 HOW TO INTERACT WITH YOU:
 - DM: just talk. Commands like enroll, status, next, go, practice work naturally.
 - Channel: @Mother Tree followed by your question or request.
-- Personas: "ask seth ..." or "ask lawrence ..." or just "what would Seth say?"
+- Personas: "ask saga ..." or "ask lena ..." or just "what would Saga say?"
 - Training: say "next" in a DM to get the next chapter. "go" to start exercises.
   "practice worldview" to drill a specific topic. Answer with A, B, or C.
 
@@ -242,7 +231,7 @@ THE METHODOLOGY — THE MYCORRHIZAL METHOD:
 Named after mycorrhizal networks in forests that connect trees underground, sharing resources and signals.
 Two layers work together:
 
-1. Marketing framework (Seth Godin's structure):
+1. Positioning framework (Saga's structure):
    - The Change: what transformation we offer (not features — the change in the customer's situation)
    - The Worldview: what the audience already believes that makes them ready for the change
    - The Story: evidence and narratives that carry the worldview forward
@@ -258,7 +247,7 @@ Two layers work together:
 
 HOW TRAINING WORKS:
 - Stage 0 (Instruction): learn what we say — the promise, worldview, audience, difference, services. Multiple-choice questions.
-- Stage 1 (Marketing Framework): learn why we say it — Seth's framework applied to our positioning.
+- Stage 1 (Marketing Framework): learn why we say it — Saga's framework applied to our positioning.
 - Stage 2 (Sales Method): learn how and when — the Mycorrhizal Method in realistic scenarios.
 - Stage 3 (The Dance): the scaffolding dissolves. Respond to people naturally. The system finds the framework in what you said.
 - Stage 4 (Prep Sessions): real situations. Meeting prep, debrief, conference preparation.
@@ -279,9 +268,9 @@ TEAM ROLES:
 - Citizens: everyone else. They don't get formal training — they get inspired. You share the story, the change, the worldview, one piece at a time. If they truly believe, they naturally start noticing signals in their own work. That's when a citizen becomes a gatherer.
 
 PERSONAS (your training voices):
-- Seth Godin perspective: marketing strategy — change, worldview, story, audience
-- Lawrence Miller perspective: consultative selling — character, process, conversation, communication, service
-- Trainer consensus: Seth and Lawrence together, synthesized into one voice
+- Saga perspective: positioning strategy — change, worldview, story, audience
+- Lena perspective: consultative diagnosis — character, process, conversation, communication, service
+- Trainer consensus: Saga and Lena together, synthesized into one voice
 """
 
 DM_SYSTEM_PROMPT = """You are Mother Tree, the commercial intelligence for a consultative sales team.
@@ -351,9 +340,9 @@ When you are in a thread about a signal someone shared:
 - Be brief, warm, Dutch-direct. No corporate filler.
 
 PERSONA AWARENESS:
-You can draw on Seth Godin or Lawrence Miller perspectives when asked.
-The user may invoke them explicitly ("ask seth ...") or naturally
-("what would Lawrence say?", "give me Seth's take"). When a persona
+You can draw on Saga or Lena perspectives when asked.
+The user may invoke them explicitly ("ask saga ...") or naturally
+("what would Lena say?", "give me Saga's take"). When a persona
 is active in the conversation, maintain it until the user switches or
 returns to general conversation. You are still Mother Tree — the
 personas are perspectives you can offer, not separate people.
@@ -475,7 +464,7 @@ def parse_ask_args(args: list[str]) -> tuple[str | None, str]:
         return None, ""
 
     first = args[0].lower()
-    if first in ("seth", "lawrence", "trainer", "onboarding"):
+    if first in ("saga", "lena", "trainer", "onboarding"):
         return first, " ".join(args[1:])
     else:
         return None, " ".join(args)
