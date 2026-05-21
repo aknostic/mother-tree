@@ -1,20 +1,20 @@
 """Extraction prompts by source type.
 
-Foundation (Seth's lens) → the change, the worldview, personas, competitors
-Narrative (Lawrence's lens) → stories, evidence, reframes for sales conversations
+Foundation (Saga's lens) → the change, the worldview, personas, competitors
+Narrative (Lena's lens) → stories, evidence, reframes for sales conversations
 """
 
 from mothertree.graphql_client import graphql
 from mothertree.llm import extract_deep
 
-# --- Foundation extraction (Seth's lens) ---
+# --- Foundation extraction (Saga's lens) ---
 
 FOUNDATION_EXTRACTION_TEMPLATE = """
-You are extracting foundational positioning through Seth Godin's marketing lens.
-Think like Seth: what's the change? Who's it for? What do they already believe?
+You are extracting foundational positioning through Saga's lens — story, tribe, change.
+Think like Saga: what's the change? Who's it for? What do they already believe?
 
 Every organization offers a transformation — not features, not services. The change.
-Your job is to find it in this document and articulate it the way Seth would.
+Your job is to find it in this document and articulate it the way Saga would.
 
 CRITICAL RULES:
 - Extract the ORGANIZATION'S positioning only. Not client transformations from case studies.
@@ -75,13 +75,12 @@ If the document adds nothing new, return [].
 """
 
 
-# --- Narrative extraction (Lawrence's lens) ---
+# --- Narrative extraction (Lena's lens) ---
 
 NARRATIVE_EXTRACTION_TEMPLATE = """
-You are extracting sales conversation material through Lawrence Miller's consultative
-selling lens. Think like Lawrence: how would a seller USE this in a real conversation?
+You are extracting sales conversation material through Lena's consultative lens — diagnose before prescribe. Think like Lena: how would a seller USE this in a real conversation?
 
-Lawrence teaches selling in the spirit of service — shared problem-solving, not pitching.
+Lena teaches selling in the spirit of service — shared problem-solving, not pitching.
 Every insight you extract should be something a consultative seller could say to a prospect
 that makes them see their own situation differently. Not a fact. A reframe.
 

@@ -14,7 +14,7 @@ Usage:
   ingest narrative url <url>                 # Single web page
   ingest narrative sitemap <url> [--filter /path1 /path2]
 
-  ingest consolidate                          # Run Seth's consolidation pass
+  ingest consolidate                          # Run Saga's consolidation pass
   ingest truncate [table ...]                 # Truncate CI tables (all if none specified)
   ingest stats                                # Show database counts
 
@@ -327,14 +327,14 @@ def _reassign_worldview_persona(old_persona_id: str, new_persona_id: str | None)
 
 
 def consolidate_foundation() -> dict:
-    """Seth's consolidation pass — deduplicate and sharpen each foundation table.
+    """Saga's consolidation pass — deduplicate and sharpen each foundation table.
 
     Runs after all documents are ingested. For each table, fetches all records,
-    asks Seth to identify the sharpest unique set, then removes the rest.
+    asks Saga to identify the sharpest unique set, then removes the rest.
     """
     from mothertree.llm import consolidate as llm_consolidate
 
-    SETH_CONSOLIDATE = """You are Seth Godin reviewing foundation data for a consultative sales team.
+    SAGA_CONSOLIDATE = """You are Saga reviewing foundation data for a consultative sales team.
 
 Your job: consolidate. Remove duplicates, merge near-duplicates into the sharpest version,
 and flag records that don't belong.
@@ -386,7 +386,7 @@ For REMOVE decisions, set better_index to the index of the superior record this 
                 context = "\n\nALREADY KEPT (remove duplicates of these):\n" + "\n".join(f"- {v}" for v in kept_values)
             try:
                 messages = [
-                    {"role": "system", "content": SETH_CONSOLIDATE},
+                    {"role": "system", "content": SAGA_CONSOLIDATE},
                     {"role": "user", "content": f"Consolidate these {len(batch)} {table} records:\n{items}{context}"},
                 ]
                 result = llm_consolidate(messages, model=GENERATION_MODEL)
@@ -430,14 +430,14 @@ mutation($id: UUID!) {{
 
 
 def consolidate_insights() -> dict:
-    """Lawrence's consolidation pass — deduplicate insights per category.
+    """Lena's consolidation pass — deduplicate insights per category.
 
-    For each category, fetches all insights, asks Lawrence to identify
+    For each category, fetches all insights, asks Lena to identify
     the sharpest unique set, then removes the rest.
     """
     from mothertree.llm import consolidate as llm_consolidate
 
-    LAWRENCE_CONSOLIDATE = """You are Lawrence Miller, a consultative selling expert reviewing sales insights.
+    LENA_CONSOLIDATE = """You are Lena, the consultative diagnostician reviewing sales insights.
 
 Your job: consolidate. Remove duplicates and near-duplicates, keeping only the sharpest version of each insight.
 
@@ -481,7 +481,7 @@ For REMOVE decisions, set better_index to the index of the superior record this 
                 context = "\n\nALREADY KEPT (remove duplicates of these):\n" + "\n".join(f"- {v}" for v in kept_values[-30:])
             try:
                 messages = [
-                    {"role": "system", "content": LAWRENCE_CONSOLIDATE},
+                    {"role": "system", "content": LENA_CONSOLIDATE},
                     {"role": "user", "content": f"Consolidate these {len(batch)} '{cat}' insights:\n{items}{context}"},
                 ]
                 result = llm_consolidate(messages, model=GENERATION_MODEL)
@@ -519,7 +519,7 @@ mutation($id: UUID!) {
 def consolidate_organization_profile() -> dict:
     """Consolidate organization profile elements after foundation consolidation.
 
-    Fetches all raw profile elements, runs Seth's consolidation,
+    Fetches all raw profile elements, runs Saga's consolidation,
     replaces stale entries with consolidated ones.
     """
     from ingestion.profile import consolidate_profile, merge_elements
@@ -834,13 +834,13 @@ def main():
         return
 
     if cmd == "consolidate":
-        print("Seth consolidation pass...", flush=True)
+        print("Saga consolidation pass...", flush=True)
         cons = consolidate_foundation()
         print(f"Consolidation: {cons}", flush=True)
         print("Organization profile consolidation...", flush=True)
         profile_stats = consolidate_organization_profile()
         print(f"Profile: {profile_stats}", flush=True)
-        print("Lawrence consolidation pass (insights)...", flush=True)
+        print("Lena consolidation pass (insights)...", flush=True)
         insight_stats = consolidate_insights()
         print(f"Insights: {insight_stats}", flush=True)
         return
