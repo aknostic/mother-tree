@@ -31,7 +31,7 @@ Why: Best reasoning model available. The CI data is the foundation of
 Model: claude-sonnet-4-6
 Provider: Anthropic API
 Origin: Anthropic (proprietary)
-Role: DM freeform conversations, Seth persona, Lawrence persona,
+Role: DM freeform conversations, Saga persona, Lena persona,
       trainer consensus, QBR synthesis, weekly/monthly briefings,
       service meeting prep, training exercise generation, on-demand
       account reviews.

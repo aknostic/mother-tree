@@ -54,8 +54,8 @@ The lenses are independent. You can run foundation once and narrative daily. You
 The pipeline directly implements the marketing framework described in `methodology/marketing-framework.md`:
 
 ```
-        SETH GODIN'S STRUCTURE              PIPELINE LAYER         DATABASE TABLES
-        ──────────────────────              ──────────────         ───────────────
+        SAGA'S STRUCTURE                      PIPELINE LAYER         DATABASE TABLES
+        ────────────────────                ──────────────         ───────────────
 
         The Change                    ───►  Foundation         ──► change
         "What transformation do                                    statement, context
