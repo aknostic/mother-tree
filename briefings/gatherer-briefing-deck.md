@@ -1,6 +1,6 @@
 # Mother Tree — Gatherer Briefing
 
-> **What's live now:** Signal capture from any Slack conversation (Spotter extracts entities/signals, Weaver resolves them into the relationship graph), character ensemble (Mother Tree, Seth, Lawrence), enrollment, role-specific training curriculum, `/mothertree` Claude Code skill. **Coming soon:** Calendar integration, automated signal scanning from external sources (RSS, job boards), stale relationship alerts.
+> **What's live now:** Signal capture from any Slack conversation (Spotter extracts entities/signals, Weaver resolves them into the relationship graph), character ensemble (Mother Tree, Saga, Lena), enrollment, role-specific training curriculum, `/mothertree` Claude Code skill. **Coming soon:** Calendar integration, automated signal scanning from external sources (RSS, job boards), stale relationship alerts.
 
 ---
 

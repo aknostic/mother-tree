@@ -127,11 +127,11 @@ The library grows. Every assessment, every conversation, every pattern we spot a
 Mother Tree isn't just a database. It actively helps you develop as a consultative seller through a structured, role-specific curriculum.
 
 **Your training path (5 stages):**
-1. **The Foundation** — the change, the worldview, the audience (Seth teaches)
-2. **The Offering** — connecting change to evidence (Seth teaches)
-3. **The Conversation** — reframes, objection handling, stakeholder lenses (Lawrence teaches)
-4. **The Difference** — competitive positioning, why us (Seth teaches)
-5. **The Hunt** — full choreography in practice (Lawrence teaches)
+1. **The Foundation** — the change, the worldview, the audience (Saga teaches)
+2. **The Offering** — connecting change to evidence (Saga teaches)
+3. **The Conversation** — reframes, objection handling, stakeholder lenses (Lena teaches)
+4. **The Difference** — competitive positioning, why us (Saga teaches)
+5. **The Hunt** — full choreography in practice (Lena teaches)
 
 Each stage has chapters with exercises generated from real content in the central intelligence. The system tracks your proficiency per chapter — if knowledge decays, you get targeted refreshers.
 
