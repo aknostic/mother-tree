@@ -846,13 +846,13 @@ def _get_response(routing: dict, history: list, user_name: str, participant_coun
                                        enrollment=enrollment,
                                        active_conversation=active_conversation)
 
-        if character == "seth":
+        if character == "saga":
             from bot.characters.saga import respond
             return respond(question=clean_text, history=history,
                            user_name=user_name, participant_count=participant_count,
                            annotation=annotation, on_chunk=on_chunk)
 
-        if character == "lawrence":
+        if character == "lena":
             from bot.characters.lena import respond
             return respond(question=clean_text, history=history,
                            user_name=user_name, participant_count=participant_count,
@@ -930,10 +930,10 @@ def _training_response(text: str, history: list, user_name: str,
 def _trainer_character_response(text: str, history: list, user_name: str,
                                   participant_count: int, annotation: dict) -> str:
     """Route freeform training messages to the trainer character."""
-    trainer = "seth"
+    trainer = "saga"
     if annotation and annotation.get("trainer"):
         trainer = annotation["trainer"]
-    if trainer == "lawrence":
+    if trainer == "lena":
         from bot.characters.lena import respond
     elif trainer == "mother_tree":
         from bot.characters.mother_tree import respond
@@ -961,7 +961,7 @@ def _fallback(annotation: dict = None) -> str:
         "enrolled": "Welcome to Mother Tree, {name}. Enrolled as {role}.",
         "status": "Stage {stage}, Chapter {chapter}. Streak: {streak} days.",
         "stats": "Stats loaded.",
-        "help": "Just talk to me. In DMs: enroll, status, next, go, practice, ask seth/lawrence. In channels: @Mother Tree followed by your question.",
+        "help": "Just talk to me. In DMs: enroll, status, next, go, practice, ask saga/lena. In channels: @Mother Tree followed by your question.",
         "progress": "Progress loaded.",
         "answer": "{feedback}",
         "training_next": "{content}",

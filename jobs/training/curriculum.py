@@ -1,6 +1,6 @@
 """Training curriculum — role-specific stages, chapters, and trainers.
 
-Each role has its own path. Each chapter specifies a trainer (seth, lawrence,
+Each role has its own path. Each chapter specifies a trainer (saga, lena,
 mother_tree) and which CI tables provide source data.
 """
 
@@ -9,53 +9,53 @@ CURRICULA = {
         0: {
             "name": "The Foundation",
             "chapters": {
-                0: {"name": "The Promise", "tables": ["change"], "trainer": "seth",
+                0: {"name": "The Promise", "tables": ["change"], "trainer": "saga",
                     "purpose": "What transformation do we offer? Not what we do — what the customer becomes."},
-                1: {"name": "The Worldview", "tables": ["worldview", "personas"], "trainer": "seth",
+                1: {"name": "The Worldview", "tables": ["worldview", "personas"], "trainer": "saga",
                     "purpose": "What does our audience already believe? These beliefs make them ready."},
-                2: {"name": "The Audience", "tables": ["personas"], "trainer": "seth",
+                2: {"name": "The Audience", "tables": ["personas"], "trainer": "saga",
                     "purpose": "Who specifically? Not everyone. Specific people with specific concerns."},
             },
         },
         1: {
             "name": "The Offering",
             "chapters": {
-                0: {"name": "The Services", "tables": ["change"], "trainer": "seth",
+                0: {"name": "The Services", "tables": ["change"], "trainer": "saga",
                     "purpose": "Assess, Build, Operate, Transfer — the journey from dependent to independent. What each phase delivers."},
-                1: {"name": "The Value Case", "tables": ["change", "insights"], "trainer": "lawrence",
+                1: {"name": "The Value Case", "tables": ["change", "insights"], "trainer": "lena",
                     "purpose": "How to talk about cost without leading with a number. This isn't an expense, it's a cost reduction."},
             },
         },
         2: {
             "name": "The Conversation",
             "chapters": {
-                0: {"name": "The Consultative Conversation", "tables": ["personas", "insights"], "trainer": "lawrence",
+                0: {"name": "The Consultative Conversation", "tables": ["personas", "insights"], "trainer": "lena",
                     "purpose": "First impression, probing, diagnosis, co-creation. Selling as shared problem-solving."},
-                1: {"name": "Objection Handling", "tables": ["competitors", "insights"], "trainer": "lawrence",
+                1: {"name": "Objection Handling", "tables": ["competitors", "insights"], "trainer": "lena",
                     "purpose": "Handle pushback with empathy, not argument. Every objection is a signal."},
-                2: {"name": "Closing and Service", "tables": ["insights", "personas"], "trainer": "lawrence",
+                2: {"name": "Closing and Service", "tables": ["insights", "personas"], "trainer": "lena",
                     "purpose": "Close naturally, then service the sale. The easiest sale is the next one."},
             },
         },
         3: {
             "name": "The Difference",
             "chapters": {
-                0: {"name": "Competitive Positioning", "tables": ["competitors"], "trainer": "seth",
+                0: {"name": "Competitive Positioning", "tables": ["competitors"], "trainer": "saga",
                     "purpose": "How we differentiate vs alternatives — the status quo they leave behind."},
-                1: {"name": "Selling Against Alternatives", "tables": ["competitors", "insights"], "trainer": "lawrence",
+                1: {"name": "Selling Against Alternatives", "tables": ["competitors", "insights"], "trainer": "lena",
                     "purpose": "What to say when they mention a competitor in conversation."},
-                2: {"name": "Storytelling with Evidence", "tables": ["insights", "change"], "trainer": "seth",
+                2: {"name": "Storytelling with Evidence", "tables": ["insights", "change"], "trainer": "saga",
                     "purpose": "Which story to tell when. Using case studies and insights to make the change real."},
             },
         },
         4: {
             "name": "The Hunt",
             "chapters": {
-                0: {"name": "Signal Recognition", "tables": ["insights", "worldview"], "trainer": "lawrence",
+                0: {"name": "Signal Recognition", "tables": ["insights", "worldview"], "trainer": "lena",
                     "purpose": "Spotting opportunities at conferences, on LinkedIn, in conversations. What to listen for."},
-                1: {"name": "Meeting Prep", "tables": ["personas", "competitors", "insights"], "trainer": "lawrence",
+                1: {"name": "Meeting Prep", "tables": ["personas", "competitors", "insights"], "trainer": "lena",
                     "purpose": "Prepare for a real conversation — research the person, find the angle, draft the opening."},
-                2: {"name": "Debrief", "tables": ["insights"], "trainer": "lawrence",
+                2: {"name": "Debrief", "tables": ["insights"], "trainer": "lena",
                     "purpose": "After the meeting — what happened, what signals did you capture, what's the next move."},
             },
         },
@@ -64,29 +64,29 @@ CURRICULA = {
         0: {
             "name": "The Change",
             "chapters": {
-                0: {"name": "Who We Are", "tables": ["change"], "trainer": "seth",
+                0: {"name": "Who We Are", "tables": ["change"], "trainer": "saga",
                     "purpose": "Brief: the transformation we offer. Enough to recognize it."},
-                1: {"name": "Who It's For", "tables": ["personas"], "trainer": "seth",
+                1: {"name": "Who It's For", "tables": ["personas"], "trainer": "saga",
                     "purpose": "The buyers. So you know who matters when you're in a delivery meeting."},
             },
         },
         1: {
             "name": "Signal Recognition",
             "chapters": {
-                0: {"name": "What's a Signal", "tables": ["insights", "worldview"], "trainer": "lawrence",
+                0: {"name": "What's a Signal", "tables": ["insights", "worldview"], "trainer": "lena",
                     "purpose": "When someone mentions cost pressure, lock-in, or compliance — that's a signal."},
-                1: {"name": "Listening for Pain", "tables": ["worldview"], "trainer": "lawrence",
+                1: {"name": "Listening for Pain", "tables": ["worldview"], "trainer": "lena",
                     "purpose": "The pain is rarely stated directly. Here's what to listen for."},
-                2: {"name": "Context Matters", "tables": ["personas"], "trainer": "lawrence",
+                2: {"name": "Context Matters", "tables": ["personas"], "trainer": "lena",
                     "purpose": "A CTO complaining about costs means something different than a developer."},
             },
         },
         2: {
             "name": "The Conversation",
             "chapters": {
-                0: {"name": "The Follow-Up", "tables": ["insights"], "trainer": "lawrence",
+                0: {"name": "The Follow-Up", "tables": ["insights"], "trainer": "lena",
                     "purpose": "Tell me more about that — how to ask without selling."},
-                1: {"name": "Knowing Your Limits", "tables": ["personas"], "trainer": "lawrence",
+                1: {"name": "Knowing Your Limits", "tables": ["personas"], "trainer": "lena",
                     "purpose": "When to listen, when to ask, when to stop and hand off."},
             },
         },
@@ -104,9 +104,9 @@ CURRICULA = {
         4: {
             "name": "Stories",
             "chapters": {
-                0: {"name": "Delivery as Soil", "tables": ["change", "insights"], "trainer": "seth",
+                0: {"name": "Delivery as Soil", "tables": ["change", "insights"], "trainer": "saga",
                     "purpose": "Your delivery work creates awareness. How client success becomes the next story."},
-                1: {"name": "The Narrative", "tables": ["insights"], "trainer": "seth",
+                1: {"name": "The Narrative", "tables": ["insights"], "trainer": "saga",
                     "purpose": "How to frame what you did as evidence for the change we offer."},
             },
         },
@@ -115,31 +115,31 @@ CURRICULA = {
         0: {
             "name": "The Change",
             "chapters": {
-                0: {"name": "Who We Are", "tables": ["change"], "trainer": "seth",
+                0: {"name": "Who We Are", "tables": ["change"], "trainer": "saga",
                     "purpose": "Brief: what the organization does."},
-                1: {"name": "Who It's For", "tables": ["personas"], "trainer": "seth",
+                1: {"name": "Who It's For", "tables": ["personas"], "trainer": "saga",
                     "purpose": "The people the platform ultimately serves."},
             },
         },
         1: {
             "name": "The Hunter's World",
             "chapters": {
-                0: {"name": "Before the Meeting", "tables": ["personas", "competitors"], "trainer": "lawrence",
+                0: {"name": "Before the Meeting", "tables": ["personas", "competitors"], "trainer": "lena",
                     "purpose": "What a hunter goes through before a first conversation."},
-                1: {"name": "In the Room", "tables": ["insights", "personas"], "trainer": "lawrence",
+                1: {"name": "In the Room", "tables": ["insights", "personas"], "trainer": "lena",
                     "purpose": "What happens in a consultative conversation. Why the prep has to be right."},
-                2: {"name": "After the Meeting", "tables": ["insights"], "trainer": "lawrence",
+                2: {"name": "After the Meeting", "tables": ["insights"], "trainer": "lena",
                     "purpose": "What a hunter needs from the platform — debrief, signal capture, next steps."},
             },
         },
         2: {
             "name": "The Gatherer's World",
             "chapters": {
-                0: {"name": "Spotting a Signal", "tables": ["worldview", "insights"], "trainer": "lawrence",
+                0: {"name": "Spotting a Signal", "tables": ["worldview", "insights"], "trainer": "lena",
                     "purpose": "What it feels like to notice something in a delivery meeting."},
-                1: {"name": "The Awkward Moment", "tables": ["personas"], "trainer": "lawrence",
+                1: {"name": "The Awkward Moment", "tables": ["personas"], "trainer": "lena",
                     "purpose": "The gatherer heard something. They're not a salesperson. What do they need?"},
-                2: {"name": "The Handoff", "tables": ["insights"], "trainer": "lawrence",
+                2: {"name": "The Handoff", "tables": ["insights"], "trainer": "lena",
                     "purpose": "What the platform should do when a gatherer shares a signal."},
             },
         },
@@ -166,14 +166,14 @@ CURRICULA = {
         0: {
             "name": "See the Change",
             "chapters": {
-                0: {"name": "The Change", "tables": ["change"], "trainer": "seth",
+                0: {"name": "The Change", "tables": ["change"], "trainer": "saga",
                     "purpose": "What the organization does and why it matters. One idea at a time."},
             },
         },
         1: {
             "name": "See the Worldview",
             "chapters": {
-                0: {"name": "The Worldview", "tables": ["worldview"], "trainer": "seth",
+                0: {"name": "The Worldview", "tables": ["worldview"], "trainer": "saga",
                     "purpose": "What the people we help believe. One belief at a time."},
             },
         },

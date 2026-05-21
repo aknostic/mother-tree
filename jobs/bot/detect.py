@@ -215,7 +215,7 @@ def detect(
 
     Returns a result dict with:
         annotation: dict | None  — structured data for the response phase
-        persona: str | None      — persona to invoke (seth, lawrence, trainer)
+        persona: str | None      — persona to invoke (saga, lena, trainer)
         must_respond: bool       — True if the bot was explicitly addressed
         clean_text: str          — text with mention/prefix stripped
         pattern_matched: bool    — True if a training/command pattern was consumed
@@ -291,7 +291,7 @@ def detect(
         return result
 
     # ------------------------------------------------------------------
-    # 4. Persona patterns ("ask seth ...", "ask lawrence ...", "ask trainer ...")
+    # 4. Persona patterns ("ask saga ...", "ask lena ...", "ask trainer ...")
     # ------------------------------------------------------------------
     if first == "ask" and len(parts) >= 2:
         persona_name = parts[1].lower()

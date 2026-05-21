@@ -3,8 +3,8 @@
 
 Usage:
   mothertree ask <question>                # Ask Mother Tree
-  mothertree ask seth <question>           # Ask Seth Godin
-  mothertree ask lawrence <question>       # Ask Lawrence Miller
+  mothertree ask saga <question>            # Ask Saga (positioning strategist)
+  mothertree ask lena <question>            # Ask Lena (consultative diagnostician)
   mothertree ask trainer [topic]           # Ask the trainer
 
   mothertree ingest foundation file <path>
@@ -19,7 +19,7 @@ Usage:
   mothertree ingest narrative url <url>
   mothertree ingest narrative sitemap <url> [--filter /path1 /path2]
 
-  mothertree ingest consolidate            # Run Seth's consolidation pass
+  mothertree ingest consolidate            # Run Saga's consolidation pass
   mothertree ingest truncate               # Truncate all CI tables
   mothertree ingest stats                  # Ingestion database counts
 
@@ -68,16 +68,16 @@ def main():
         persona, question = parse_ask_args(args[1:])
         if not persona and not question:
             print("Usage: mothertree ask <question>")
-            print("       mothertree ask seth <question>")
-            print("       mothertree ask lawrence <question>")
+            print("       mothertree ask saga <question>")
+            print("       mothertree ask lena <question>")
             print("       mothertree ask trainer [topic]")
             sys.exit(0)
         user_name = os.environ.get("USER", "you")
         # Route through character modules — same code as Slack bot
-        if persona == "seth":
+        if persona == "saga":
             from bot.characters.saga import respond
             print(respond(question=question, history=[], user_name=user_name))
-        elif persona == "lawrence":
+        elif persona == "lena":
             from bot.characters.lena import respond
             print(respond(question=question, history=[], user_name=user_name))
         elif persona == "trainer":

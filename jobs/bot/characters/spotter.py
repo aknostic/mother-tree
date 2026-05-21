@@ -66,7 +66,7 @@ YOUR RULES:
 - Never fabricate an entity, a date, or a pain point.
 - PEOPLE are individual humans with real names. Never create person entities for:
   job titles ("CTO", "CFO"), team references ("Internal Team", "the team"),
-  combined names ("Jurg and Pim"), system names ("Mother Tree", "Seth", "Lawrence"),
+  combined names ("Jurg and Pim"), system names ("Mother Tree", "Saga", "Lena"),
   or generic labels ("Unknown Client"). If you only know a first name, that's OK.
 - ORGANIZATIONS are real companies, not concepts. Never create organization entities
   for sectors ("Dutch Municipalities"), generic labels ("Unknown"), or our own

@@ -21,7 +21,7 @@ FALLBACKS = {
     "enrolled": "Welcome to Mother Tree, {name}. Enrolled as {role}.",
     "status": "Stage {stage}, Chapter {chapter}. Streak: {streak} days.",
     "stats": "Stats loaded.",
-    "help": "Just talk to me. In DMs: enroll, status, next, go, practice, ask seth/lawrence/trainer. In channels: @Mother Tree followed by your question.",
+    "help": "Just talk to me. In DMs: enroll, status, next, go, practice, ask saga/lena/trainer. In channels: @Mother Tree followed by your question.",
     "progress": "Progress loaded.",
     "answer_scored": "{feedback}",
     "training_delivered": "{content}",

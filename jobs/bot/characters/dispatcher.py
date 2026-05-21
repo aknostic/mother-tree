@@ -13,7 +13,7 @@ from mothertree.llm import extract
 
 log = logging.getLogger(__name__)
 
-PERSONA_NAMES = {"seth", "lawrence", "trainer"}
+PERSONA_NAMES = {"saga", "lena", "trainer"}
 
 _DEBRIEF_TRIGGERS = frozenset({"debrief", "meeting notes"})
 
@@ -44,11 +44,11 @@ def _detect_persona(text: str) -> str | None:
     """Detect a persona reference in natural conversation.
 
     Matches:
-    - "ask seth ..." / "ask lawrence ..." / "ask trainer ..."
-    - "what would seth say" / "what would lawrence think"
-    - "seth's take on ..." / "lawrence's view on ..."
-    - "how would seth ..." / "how would lawrence ..."
-    - Any mention of seth/lawrence in a question context
+    - "ask saga ..." / "ask lena ..." / "ask trainer ..."
+    - "what would saga say" / "what would lena think"
+    - "saga's take on ..." / "lena's view on ..."
+    - "how would saga ..." / "how would lena ..."
+    - Any mention of saga/lena in a question context
     """
     lower = text.lower()
 
@@ -58,16 +58,16 @@ def _detect_persona(text: str) -> str | None:
         return parts[1]
 
     # Conversational patterns
-    for name in ("seth", "lawrence"):
+    for name in ("saga", "lena"):
         if name not in lower:
             continue
-        # "what would seth say/think", "how would lawrence approach"
+        # "what would saga say/think", "how would lena approach"
         if f"would {name}" in lower:
             return name
-        # "seth's take/view/perspective/opinion"
+        # "saga's take/view/perspective/opinion"
         if f"{name}'s" in lower or f"{name}s " in lower:
             return name
-        # "ask seth" anywhere in the message
+        # "ask saga" anywhere in the message
         if f"ask {name}" in lower:
             return name
         # Name mentioned in a question
@@ -250,11 +250,11 @@ def dispatch(
     """Route a message to the right character.
 
     Returns:
-        character: "mother_tree" | "seth" | "lawrence" | "silent"
+        character: "mother_tree" | "saga" | "lena" | "silent"
         intent: str — what the message is about
         annotation: dict | None — structured data for the character
         must_respond: bool
-        training_mode: bool — Seth+Lawrence co-train
+        training_mode: bool — Saga+Lena co-train
         signal_flag: bool — triage detected commercial signal
         clean_text: str — text with mention stripped
         exercise_pending: dict | None
@@ -337,8 +337,8 @@ def dispatch(
         return result
 
     # 3. Persona patterns → route to persona character
-    # Match explicit: "ask seth ...", "ask lawrence ..."
-    # Match conversational: "what would seth say", "seth's take on", "how would lawrence approach"
+    # Match explicit: "ask saga ...", "ask lena ..."
+    # Match conversational: "what would saga say", "saga's take on", "how would lena approach"
     detected_persona = _detect_persona(clean)
     if detected_persona:
         persona_name = detected_persona

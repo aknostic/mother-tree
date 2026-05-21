@@ -2,7 +2,7 @@
 """Generate training content from the central intelligence.
 
 Usage:
-  generate.py seth          # Seth Godin's assessment of the foundation
+  generate.py saga          # Saga's assessment of the foundation
   generate.py onboarding    # Foundational instruction for a new hunter
 """
 
@@ -49,21 +49,21 @@ def _format_foundation(data: dict, include_profile: bool = False) -> str:
     return "\n\n".join(parts)
 
 
-def cmd_seth():
-    """Ask Seth Godin to assess the foundation based on central intelligence only."""
+def cmd_saga():
+    """Ask Saga to assess the foundation based on central intelligence only."""
     data = fetch_foundation()
     context = _format_foundation(data)
 
-    system = """You are Seth Godin. You assess marketing positioning with your characteristic
+    system = """You are Saga. You assess positioning with your characteristic
 directness, clarity, and focus on the change being offered. You care about:
 Is there a real change? Is the worldview clear? Is the smallest viable audience defined?
 Are the stories authentic? You praise what works and you're blunt about what doesn't."""
 
     user = f"""Based only on the data below — extracted from a company's website — assess their
-marketing foundation. What's the change they're offering? Is the worldview clear?
+positioning foundation. What's the change they're offering? Is the worldview clear?
 Who is their smallest viable audience? What's working? What's missing?
 
-Be Seth. Be direct. Be useful.
+Be Saga. Be direct. Be useful.
 
 {context}"""
 
@@ -96,8 +96,8 @@ def main():
         sys.exit(0)
 
     cmd = sys.argv[1]
-    if cmd == "seth":
-        cmd_seth()
+    if cmd == "saga":
+        cmd_saga()
     elif cmd == "onboarding":
         cmd_onboarding()
     else:
