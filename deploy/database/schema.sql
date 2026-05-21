@@ -82,10 +82,6 @@ CREATE TABLE contacts (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Add foreign key for worldview → personas (now that personas exists)
-ALTER TABLE worldview ADD CONSTRAINT worldview_persona_fk FOREIGN KEY (persona_id) REFERENCES personas(id);
-CREATE INDEX idx_worldview_persona ON worldview(persona_id);
-
 -- === CONVERSATION LAYER (Mycorrhizal Method: live loop) ===
 
 -- Signals
@@ -156,6 +152,10 @@ CREATE TABLE personas (
     embedding vector(3584),
     created_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Add foreign key for worldview → personas (now that personas table exists)
+ALTER TABLE worldview ADD CONSTRAINT worldview_persona_fk FOREIGN KEY (persona_id) REFERENCES personas(id);
+CREATE INDEX idx_worldview_persona ON worldview(persona_id);
 
 -- Case studies (loaded from content sources)
 CREATE TABLE case_studies (
@@ -378,8 +378,7 @@ CREATE INDEX idx_engagements_company ON engagements(company_id);
 CREATE INDEX idx_engagements_status ON engagements(status);
 CREATE INDEX idx_opportunities_company ON opportunities(company_id);
 CREATE INDEX idx_opportunities_stage ON opportunities(stage);
-CREATE INDEX idx_signals_opportunity ON signals(opportunity_id);
-CREATE INDEX idx_interactions_opportunity ON interactions(opportunity_id);
+-- opportunity_id columns on signals and interactions are not yet defined; indexes added after migration
 CREATE INDEX idx_event_participants_event ON event_participants(event_id);
 CREATE INDEX idx_event_participants_contact ON event_participants(contact_id);
 CREATE INDEX idx_training_progress_user ON training_progress(user_id);
