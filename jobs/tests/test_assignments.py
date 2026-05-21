@@ -87,33 +87,33 @@ class TestFoundationAssignments:
 
 class TestPersonaAssignments:
 
-    def test_seth_grounded_in_intelligence(self):
+    def test_saga_grounded_in_intelligence(self):
         from mothertree.ask import ask
-        response = ask("seth", "What is the change we offer?", user_name="test")
+        response = ask("saga", "What is the change we offer?", user_name="test")
 
         confidence = assess_confidence(
             response,
-            "Seth Godin should describe a transformation — from dependency to ownership, "
+            "Saga should describe a transformation — from dependency to ownership, "
             "from renting to owning, from vendor control to freedom. Should reference "
             "the audience's pain (cost, lock-in) and the worldview (they believe independence "
             "is possible). Should NOT be generic marketing advice — should be specific to "
             "the company's positioning in the central intelligence."
         )
-        assert confidence >= CONFIDENCE_THRESHOLD, f"Seth grounding confidence: {confidence}"
+        assert confidence >= CONFIDENCE_THRESHOLD, f"Saga grounding confidence: {confidence}"
 
-    def test_lawrence_practical_and_service_oriented(self):
+    def test_lena_practical_and_service_oriented(self):
         from mothertree.ask import ask
-        response = ask("lawrence", "How do I approach a first meeting?", user_name="test")
+        response = ask("lena", "How do I approach a first meeting?", user_name="test")
 
         confidence = assess_confidence(
             response,
-            "Lawrence Miller should give practical consultative selling advice: "
+            "Lena should give practical consultative diagnostic advice: "
             "listen first, ask open-ended questions, probe for the real problem, "
             "co-create understanding, build trust through service. Should reference "
             "the company's specific offerings when relevant. Should NOT be a pitch — "
             "should be about earning the right to a deeper conversation."
         )
-        assert confidence >= CONFIDENCE_THRESHOLD, f"Lawrence grounding confidence: {confidence}"
+        assert confidence >= CONFIDENCE_THRESHOLD, f"Lena grounding confidence: {confidence}"
 
     def test_trainer_consensus_unified(self):
         from mothertree.ask import ask
@@ -124,7 +124,7 @@ class TestPersonaAssignments:
             "The trainer should produce ONE coherent exercise, not two separate perspectives. "
             "Should incorporate marketing strategy (worldview, reframe, positioning) AND "
             "consultative selling (listen, diagnose, co-create). The output should feel like "
-            "one expert trainer, not Seth and Lawrence arguing. Should address the trainee "
+            "one expert trainer, not Saga and Lena arguing. Should address the trainee "
             "by name and be practical."
         )
         assert confidence >= CONFIDENCE_THRESHOLD, f"Trainer consensus confidence: {confidence}"
@@ -162,20 +162,20 @@ class TestConsistencyAssignments:
         assert confidence >= CONFIDENCE_THRESHOLD, f"Source consistency confidence: {confidence}"
 
     def test_canonical_reflects_frameworks(self):
-        """The canonical positioning should be a valid application of Seth's framework."""
+        """The canonical positioning should be a valid application of Saga's framework."""
         from mothertree.graphql_client import graphql
 
         canonical = graphql('{ allChangesList(condition: {source: "canonical"}) { statement context } }')
-        seth = graphql('{ allChangesList(condition: {source: "framework:seth"}) { statement } }')
+        saga = graphql('{ allChangesList(condition: {source: "framework:saga"}) { statement } }')
 
-        if not canonical.get("allChangesList") or not seth.get("allChangesList"):
+        if not canonical.get("allChangesList") or not saga.get("allChangesList"):
             pytest.skip("Need canonical and framework records")
 
         confidence = assess_confidence(
-            f"SETH'S FRAMEWORK:\n{seth['allChangesList'][0]['statement']}\n\n"
+            f"SAGA'S FRAMEWORK:\n{saga['allChangesList'][0]['statement']}\n\n"
             f"CANONICAL POSITIONING:\n{canonical['allChangesList'][0]['statement']}",
-            "The canonical positioning should be a specific application of Seth's framework. "
-            "Seth says 'The Change is the transformation you offer — what the customer becomes.' "
+            "The canonical positioning should be a specific application of Saga's framework. "
+            "Saga says 'The Change is the transformation you offer — what the customer becomes.' "
             "The canonical change should describe a specific transformation (from dependency to "
             "ownership, from SaaS costs to controlled infrastructure). It should be concrete "
             "where the framework is abstract."

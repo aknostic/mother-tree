@@ -264,10 +264,10 @@ class TestDetect:
         assert result["annotation"]["type"] == "status"
         assert result["annotation"]["stage"] == 0
 
-    def test_persona_seth(self):
+    def test_persona_saga(self):
         from bot.detect import detect
-        result = detect("ask seth what is the change?", participant_count=1, enrolled=False)
-        assert result["persona"] == "seth"
+        result = detect("ask saga what is the change?", participant_count=1, enrolled=False)
+        assert result["persona"] == "saga"
         assert result["clean_text"] == "what is the change?"
 
     def test_training_next_dm_only(self):
@@ -441,7 +441,7 @@ class TestModelSelection:
 
     def test_persona_uses_generation_model(self):
         from mothertree.ask import select_model
-        model = select_model(annotation=None, persona="seth")
+        model = select_model(annotation=None, persona="saga")
         from mothertree.config import GENERATION_MODEL
         assert model == GENERATION_MODEL
 

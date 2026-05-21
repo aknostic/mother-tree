@@ -211,16 +211,16 @@ class TestDispatcher:
         assert result["character"] == "mother_tree"
         assert result["annotation"]["type"] == "help"
 
-    def test_persona_seth_routes_to_seth(self):
+    def test_persona_saga_routes_to_saga(self):
         from bot.characters.dispatcher import dispatch
-        result = dispatch(text="ask seth what is the change?", participant_count=1, enrolled=False)
-        assert result["character"] == "seth"
+        result = dispatch(text="ask saga what is the change?", participant_count=1, enrolled=False)
+        assert result["character"] == "saga"
         assert result["clean_text"] == "what is the change?"
 
-    def test_persona_lawrence_routes_to_lawrence(self):
+    def test_persona_lena_routes_to_lena(self):
         from bot.characters.dispatcher import dispatch
-        result = dispatch(text="ask lawrence how do I close?", participant_count=1, enrolled=False)
-        assert result["character"] == "lawrence"
+        result = dispatch(text="ask lena how do I close?", participant_count=1, enrolled=False)
+        assert result["character"] == "lena"
 
     def test_persona_trainer_sets_training_mode(self):
         from bot.characters.dispatcher import dispatch
@@ -458,14 +458,14 @@ class TestPipelineIntegration:
     @patch("bot.pipeline.get_memory")
     @patch("bot.pipeline.dispatch")
     @patch("bot.pipeline._resolve_user")
-    def test_persona_seth_uses_character_module(self, mock_resolve,
+    def test_persona_saga_uses_character_module(self, mock_resolve,
                                                  mock_dispatch, mock_memory,
                                                  mock_gather, mock_ctx, mock_chat, mock_bg):
         from bot.pipeline import _process_message
         mock_resolve.return_value = (None, None, False)
         mock_dispatch.return_value = {
-            "character": "seth", "intent": "persona",
-            "annotation": {"type": "persona", "persona": "seth", "question": "what is the change?"},
+            "character": "saga", "intent": "persona",
+            "annotation": {"type": "persona", "persona": "saga", "question": "what is the change?"},
             "must_respond": True, "training_mode": False,
             "signal_flag": False, "clean_text": "what is the change?",
             "exercise_pending": None,
@@ -477,13 +477,13 @@ class TestPipelineIntegration:
         client.chat_postMessage.return_value = {"ts": "1234.5678"}
 
         _process_message(
-            text="ask seth what is the change?", user_slack_id="U123", user_name="Jurg",
+            text="ask saga what is the change?", user_slack_id="U123", user_name="Jurg",
             channel_id="D123", context_type="dm", participant_count=1,
             respond=MagicMock(), client=client, thread_ts=None,
             ts="0001.0001", bot_user_id="BXXX",
         )
 
         mock_chat.assert_called_once()
-        # Verify Seth's identity is in the system prompt
+        # Verify Saga's identity is in the system prompt
         system_prompt = mock_chat.call_args[0][0][0]["content"]
-        assert "Seth Godin" in system_prompt
+        assert "Saga" in system_prompt

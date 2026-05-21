@@ -161,7 +161,7 @@ class TestExerciseGenerator:
         assert result["stage"] == 0
         assert result["chapter"] == 0
         assert result["chapter_name"] == "The Promise"
-        assert result["trainer"] == "seth"
+        assert result["trainer"] == "saga"
         assert result["type"] == "instruction"
         assert len(result["questions"]) == 3
         assert "instruction" in result
@@ -190,7 +190,7 @@ class TestExerciseGenerator:
     def test_hunter_stage1_is_the_offering(self):
         from training.curriculum import get_chapter
         ch = get_chapter("hunter", 1, 0)
-        assert ch["trainer"] == "seth"
+        assert ch["trainer"] == "saga"
         assert ch["name"] == "The Services"
 
     @patch("training.engine.generate")
@@ -586,10 +586,10 @@ class TestAskWithHistory:
     def test_ask_with_history_persona(self, mock_ctx, mock_chat, mock_gather):
         from mothertree.ask import ask_with_history
         mock_ctx.return_value = "CI context"
-        mock_chat.return_value = "Seth says..."
-        ask_with_history("why positioning?", [], persona="seth")
+        mock_chat.return_value = "Saga says..."
+        ask_with_history("why positioning?", [], persona="saga")
         messages = mock_chat.call_args[0][0]
-        assert "Seth Godin" in messages[0]["content"]
+        assert "Saga" in messages[0]["content"]
         assert "NEVER FABRICATE" in messages[0]["content"]
 
     @patch("mothertree.ask.gather_context")

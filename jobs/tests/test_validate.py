@@ -62,15 +62,15 @@ class TestSchemaValidation:
 class TestAskParsing:
     """parse_ask_args correctly routes personas."""
 
-    def test_seth(self):
+    def test_saga(self):
         from mothertree.ask import parse_ask_args
-        p, q = parse_ask_args(["seth", "what", "is", "the", "change?"])
-        assert p == "seth" and "change" in q
+        p, q = parse_ask_args(["saga", "what", "is", "the", "change?"])
+        assert p == "saga" and "change" in q
 
-    def test_lawrence(self):
+    def test_lena(self):
         from mothertree.ask import parse_ask_args
-        p, q = parse_ask_args(["lawrence", "how", "to", "close"])
-        assert p == "lawrence"
+        p, q = parse_ask_args(["lena", "how", "to", "close"])
+        assert p == "lena"
 
     def test_trainer(self):
         from mothertree.ask import parse_ask_args
@@ -89,8 +89,8 @@ class TestAskParsing:
 
     def test_case_insensitive(self):
         from mothertree.ask import parse_ask_args
-        p, _ = parse_ask_args(["SETH", "test"])
-        assert p == "seth"
+        p, _ = parse_ask_args(["SAGA", "test"])
+        assert p == "saga"
 
 
 class TestBotConsistency:
@@ -106,7 +106,7 @@ class TestBotConsistency:
         """Personas in the ask module should include all advertised ones."""
         from mothertree.ask import PERSONAS, parse_ask_args
 
-        for persona in ["seth", "lawrence"]:
+        for persona in ["saga", "lena"]:
             assert persona in PERSONAS, f"Persona '{persona}' not in PERSONAS dict"
             p, _ = parse_ask_args([persona, "test"])
             assert p == persona

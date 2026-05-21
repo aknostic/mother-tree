@@ -6,7 +6,7 @@ SAMPLE_EXERCISE = {
     "stage": 0,
     "chapter": 0,
     "chapter_name": "The Promise",
-    "trainer": "seth",
+    "trainer": "saga",
     "type": "instruction",
     "instruction": "Here is what we actually say about the change.",
     "questions": [
@@ -373,7 +373,7 @@ class TestFullChapterFlow:
         # 2. Deliver chapter
         mock_gen.return_value = {
             "stage": 0, "chapter": 0, "chapter_name": "The Promise",
-            "trainer": "seth", "type": "instruction",
+            "trainer": "saga", "type": "instruction",
             "instruction": "The promise is the transformation.",
             "questions": [
                 {"question": "Q1?", "options": {"A": "opt a", "B": "opt b", "C": "opt c"}, "correct": "A", "why": "w", "redirect": "r"},
@@ -423,7 +423,7 @@ class TestRefresher:
         from training.operations import deliver_refresher
         mock_gen.return_value = {
             "stage": 0, "chapter": 0, "chapter_name": "The Promise",
-            "trainer": "seth", "type": "practice",
+            "trainer": "saga", "type": "practice",
             "questions": [
                 {"question": "Q1?", "options": {"A": "a", "B": "b", "C": "c"}, "correct": "A", "why": "w", "redirect": "r"},
                 {"question": "Q2?", "options": {"A": "a", "B": "b", "C": "c"}, "correct": "B", "why": "w", "redirect": "r"},
@@ -452,7 +452,7 @@ class TestRefresher:
         from training.operations import deliver_refresher
         mock_gen.return_value = {
             "stage": 0, "chapter": 0, "chapter_name": "The Promise",
-            "trainer": "seth", "type": "practice",
+            "trainer": "saga", "type": "practice",
             "questions": [{"question": "Q?", "options": {"A": "a", "B": "b", "C": "c"}, "correct": "A", "why": "w", "redirect": "r"}] * 3,
             "source_tables": ["change"],
         }

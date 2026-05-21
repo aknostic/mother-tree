@@ -40,42 +40,42 @@ class TestCurriculumLookup:
     def test_get_chapter_returns_trainer(self):
         from training.curriculum import get_chapter
         ch = get_chapter("hunter", 0, 0)
-        assert ch["trainer"] == "seth"
+        assert ch["trainer"] == "saga"
         assert ch["name"] == "The Promise"
         assert "change" in ch["tables"]
 
     def test_hunter_stage1_is_offering(self):
         from training.curriculum import get_chapter
         ch = get_chapter("hunter", 1, 0)
-        assert ch["trainer"] == "seth"
+        assert ch["trainer"] == "saga"
         assert ch["name"] == "The Services"
 
-    def test_hunter_stage2_is_lawrence(self):
+    def test_hunter_stage2_is_lena(self):
         from training.curriculum import get_chapter
         ch = get_chapter("hunter", 2, 0)
-        assert ch["trainer"] == "lawrence"
+        assert ch["trainer"] == "lena"
         assert ch["name"] == "The Consultative Conversation"
 
     def test_hunter_stage3_is_mixed(self):
         from training.curriculum import get_chapter
-        assert get_chapter("hunter", 3, 0)["trainer"] == "seth"
-        assert get_chapter("hunter", 3, 1)["trainer"] == "lawrence"
+        assert get_chapter("hunter", 3, 0)["trainer"] == "saga"
+        assert get_chapter("hunter", 3, 1)["trainer"] == "lena"
 
     def test_hunter_stage4_is_the_hunt(self):
         from training.curriculum import get_chapter
         ch = get_chapter("hunter", 4, 0)
-        assert ch["trainer"] == "lawrence"
+        assert ch["trainer"] == "lena"
         assert ch["name"] == "Signal Recognition"
 
     def test_get_chapter_gatherer_stage1(self):
         from training.curriculum import get_chapter
         ch = get_chapter("gatherer", 1, 0)
-        assert ch["trainer"] == "lawrence"
+        assert ch["trainer"] == "lena"
 
     def test_get_chapter_farmer_stage1(self):
         from training.curriculum import get_chapter
         ch = get_chapter("farmer", 1, 0)
-        assert ch["trainer"] == "lawrence"
+        assert ch["trainer"] == "lena"
 
     def test_get_total_chapters(self):
         from training.curriculum import get_total_chapters
