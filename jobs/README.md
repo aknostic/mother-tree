@@ -33,8 +33,8 @@ jobs/
 │   └── characters/      # Character modules
 │       ├── dispatcher.py # Routes messages to the right character
 │       ├── mother_tree.py # Default conversational character
-│       ├── seth.py      # Marketing strategy (Seth Godin)
-│       ├── lawrence.py  # Consultative selling (Lawrence Miller)
+│       ├── saga.py      # Positioning strategy ([Saga](../docs/inspirations.md))
+│       ├── lena.py      # Consultative diagnosis ([Lena](../docs/inspirations.md))
 │       ├── spotter.py   # Entity/signal extraction from conversations
 │       ├── weaver.py    # Entity resolution against relationship graph
 │       └── pulse.py     # Nudge generation for Pulse scanner

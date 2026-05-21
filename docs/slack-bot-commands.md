@@ -31,10 +31,10 @@ Citizens don't get formal training — they get inspired, one piece at a time.
 
 Works everywhere (DM and channels):
 
-- `ask seth <question>` — marketing strategy (Seth Godin perspective)
-- `ask lawrence <question>` — consultative selling (Lawrence Miller perspective)
+- `ask saga <question>` — positioning strategy ([Saga](inspirations.md) — positioning strategist)
+- `ask lena <question>` — consultative diagnosis ([Lena](inspirations.md) — consultative diagnostician)
 - `ask trainer <question>` — both perspectives synthesized
-- Or naturally: "what would Lawrence say about this?"
+- Or naturally: "what would Lena say about this?"
 
 ### Admin commands (DM only, admin users only)
 
@@ -60,8 +60,8 @@ In DMs she always responds.
 Mother Tree has three visible voices:
 
 - **Mother Tree** — the default. The Librarian. Conversational, practical, draws on everything in the central intelligence. Most of what you hear is Mother Tree.
-- **Seth** — marketing strategy. Thinks in terms of change, worldview, smallest viable audience. Activated by `ask seth` or when the conversation is about positioning.
-- **Lawrence** — consultative selling. Thinks in terms of reframes, qualification, conversation choreography. Activated by `ask lawrence` or when you're preparing for a meeting.
+- **Saga** — positioning strategy. Thinks in terms of change, worldview, smallest viable audience. Activated by `ask saga` or when the conversation is about positioning.
+- **Lena** — consultative diagnosis. Thinks in terms of reframes, qualification, conversation choreography. Activated by `ask lena` or when you're preparing for a meeting.
 - **Trainer** — both perspectives synthesized. Activated by `ask trainer`.
 
 Behind the scenes, invisible characters do background work:
@@ -89,8 +89,8 @@ For farmers and operators. Entry point: `jobs/cli.py` (run via `uv run python -m
 
 ```bash
 # Content ingestion
-mothertree ingest foundation {sitemap,repo,file,dir,url} <source>   # Seth lens
-mothertree ingest narrative {sitemap,repo,file,dir,url} <source>    # Lawrence lens
+mothertree ingest foundation {sitemap,repo,file,dir,url} <source>   # Saga lens
+mothertree ingest narrative {sitemap,repo,file,dir,url} <source>    # Lena lens
 mothertree ingest consolidate                            # LLM-driven dedup + org profile synthesis
 mothertree ingest truncate {change,worldview,personas,competitors,insights}  # Clear a table
 

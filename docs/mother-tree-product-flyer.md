@@ -29,7 +29,7 @@ Marketing docs ──┐                                          ┌── Cent
 Blog posts      ─┤              Signals in Slack ──────────→│   (PostgreSQL + GraphQL)
 Published articles┤             Meeting debriefs ──────────→│
 Case studies    ──┘             Conference notes ──────────→│── Training engine
-                                                            │   (seth + lawrence consensus)
+                                                            │   (saga + lena consensus)
                  Foundation     Conversation                │
                  + Narrative    layer                       │── Signal enrichment
                  extraction                                 │   (intent classification,
@@ -56,9 +56,9 @@ Each stage adds something to the prospect: awareness, perspective, clarity, a pl
 
 Two expert personas, trained on your content, co-train your team:
 
-**Seth** (marketing strategy) — teaches the change, the worldview, the story. "Who are we talking to? What do they believe? How do our stories create soil?"
+**[Saga](inspirations.md)** (positioning strategy) — teaches the change, the worldview, the story. "Who are we talking to? What do they believe? How do our stories create soil?"
 
-**Lawrence** (consultative selling) — teaches the consultative conversation. "How do you probe for the real problem? How do you co-create solutions? How do you close without pitching?"
+**[Lena](inspirations.md)** (consultative diagnosis) — teaches the consultative conversation. "How do you probe for the real problem? How do you co-create solutions? How do you close without pitching?"
 
 **Trainer** — their consensus. One exercise, both perspectives. The marketing framework meets the sales method.
 
@@ -85,7 +85,7 @@ Training adapts to role (hunters get full training, gatherers focus on signals a
 
 ## The interface
 
-**Slack:** `/mothertree ask seth "is our worldview clear?"` — instant answers from the central intelligence. Signal capture, thread conversations, enrichment. Training exercises via DM.
+**Slack:** `/mothertree ask saga "is our worldview clear?"` — instant answers from the central intelligence. Signal capture, thread conversations, enrichment. Training exercises via DM.
 
 **Claude Code:** `/mothertree ask trainer "practice NIS2 objections"` — same intelligence, same personas, from your terminal.
 

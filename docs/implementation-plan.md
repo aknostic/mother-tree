@@ -6,13 +6,13 @@
 |-------|--------|-------|
 | Prerequisites | DONE | Namespace, Flux, Inference, S3, DNS — all provisioned |
 | 1. Foundation | DONE | PostgreSQL 17 + pgvector 0.8.2 (migrated from pgvecto.rs), PostGraphile GraphQL (migrated from Hasura), 11 tables, TLS, S3 backups, vector embeddings on all CI tables |
-| 2. Content ingestion | DONE | Dual-lens (foundation: Seth, narrative: Lawrence), three sources, context-aware extraction (Qwen 3.5), multi-model scoring, pre-insert dedup, skip-unchanged. 303 foundation records, narrative extraction running. |
-| 3. Slack bot | DONE | Unified pipeline, character ensemble (Mother Tree, Seth, Lawrence, Spotter, Weaver), signal capture, training via DM |
+| 2. Content ingestion | DONE | Dual-lens (foundation: Saga, narrative: Lena), three sources, context-aware extraction (Qwen 3.5), multi-model scoring, pre-insert dedup, skip-unchanged. 303 foundation records, narrative extraction running. |
+| 3. Slack bot | DONE | Unified pipeline, character ensemble (Mother Tree, Saga, Lena, Spotter, Weaver), signal capture, training via DM |
 | 4. Calendar | DONE | iCal feed sync, prep 2 days before meetings, debrief prompt 3 days after |
 | 5. Training engine | DONE | Role-specific curriculum (hunter/gatherer/farmer/citizen), exercise generation with answer randomization, proficiency decay + refreshers, progress tracking, streak + nudges, citizen inspiration flow (4 stages, 2x/week), vector-driven source selection. CronJob deployed. |
 | 6. Rhythm | MOSTLY DONE | Stale relationship checks (weekdays 08:00), weekly pipeline review (Mondays 08:00), monthly retrospective (1st of month 09:00, LLM-synthesized). Signal scanner not started. |
 | 7. Claude Code skill | DONE | `/mothertree` skill using shared `ask` module (`mothertree/ask.py`) |
-| — Character ensemble | DONE | Mother Tree (Librarian), Seth, Lawrence, Dispatcher, Spotter (signal extraction), Weaver (relationship graph) |
+| — Character ensemble | DONE | Mother Tree (Librarian), [Saga](inspirations.md), [Lena](inspirations.md), Dispatcher, Spotter (signal extraction), Weaver (relationship graph) |
 | — Organization profile | DONE | Wired into ingestion pipeline + context, vector-based dedup (85% similarity merge) |
 | — Vector embeddings | DONE | All CI tables (insights, change, worldview, personas, competitors, signals, organization) with BGE Multilingual Gemma2, semantic search via pgvector cosine distance |
 
@@ -69,7 +69,7 @@ CNPG is cluster-wide — our Cluster resource in `deploy/` will be picked up aut
 
 **Completed:**
 - [x] Content ingestion CLI (`jobs/cli.py`) with five input modes (file, dir, repo, url, sitemap)
-- [x] Dual-lens extraction: foundation (Seth) and narrative (Lawrence)
+- [x] Dual-lens extraction: foundation (Saga) and narrative (Lena)
 - [x] Deep extraction with Qwen 3.5, classification with Mistral Small 3.2
 - [x] Context-aware foundation extraction: injects existing records to avoid duplicates
 - [x] Pre-insert dedup check as deterministic safety net
@@ -99,13 +99,13 @@ CNPG is cluster-wide — our Cluster resource in `deploy/` will be picked up aut
 
 **Completed:**
 - [x] Unified pipeline: detect → triage → converse → extract
-- [x] Character ensemble: Mother Tree (Librarian), Seth (marketing), Lawrence (sales), Dispatcher (routing)
+- [x] Character ensemble: Mother Tree (Librarian), Saga (positioning), Lena (consultative diagnosis), Dispatcher (routing)
 - [x] Spotter: extracts entities, signals, actions, sales stage from conversations
 - [x] Weaver: resolves entities into relationship graph (contacts, companies, deduplication)
 - [x] Participates in all channels (not just #signals)
 - [x] Commands via DM or @mention (no slash commands)
 - [x] Training delivery in DMs (next, go, practice, exercise scoring)
-- [x] Personas (ask seth/lawrence/trainer) in all contexts
+- [x] Personas (ask saga/lena/trainer) in all contexts
 - [x] Background signal extraction from any conversation
 - [x] Channel memory and thread memory with configurable windows
 - [x] Per-channel message serialization
@@ -139,7 +139,7 @@ CNPG is cluster-wide — our Cluster resource in `deploy/` will be picked up aut
 
 **Goal:** Role-specific progressive training via Slack DM — from foundational concepts through scenario practice.
 
-**Architecture:** Role-specific curriculum (`jobs/training/curriculum.py`) with stages and chapters. Each chapter specifies a trainer (Seth, Lawrence, or Mother Tree) and which CI tables provide source data. Exercise generation via Qwen 3.5. Proficiency tracking with time-based decay.
+**Architecture:** Role-specific curriculum (`jobs/training/curriculum.py`) with stages and chapters. Each chapter specifies a trainer (Saga, Lena, or Mother Tree) and which CI tables provide source data. Exercise generation via Qwen 3.5. Proficiency tracking with time-based decay.
 
 **Completed:**
 - [x] Role-specific curriculum: Hunter (5 stages), Gatherer (5 stages), Farmer (3 stages)

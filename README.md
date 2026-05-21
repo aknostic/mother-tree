@@ -12,10 +12,10 @@ Designed for relationship-driven, expertise-based businesses with small deal vol
 
 **Two layers:**
 - **Always-on** (Kubernetes) — scheduled jobs extract content, deliver training, check for stale relationships, generate pipeline reviews. Calls European LLMs (Scaleway: Qwen 3.5, Mistral Small 3.2, Devstral 2, Llama 3.3, Gemma 3). Anthropic (Haiku/Sonnet) only for triage and arbitration — core pipeline runs without it.
-- **Interactive** — Slack bot as conversational participant (DMs and channels) + Claude Code skill queries via GraphQL. Character ensemble: Mother Tree (Librarian), Seth (marketing), Lawrence (sales), with invisible Spotter and Weaver for background intelligence.
+- **Interactive** — Slack bot as conversational participant (DMs and channels) + Claude Code skill queries via GraphQL. Character ensemble: Mother Tree (Librarian), [Saga](docs/inspirations.md) (positioning), [Lena](docs/inspirations.md) (consultative diagnosis), with invisible Spotter and Weaver for background intelligence.
 
 **V1 features:**
-- Content ingestion: dual-lens pipeline (foundation via Seth, narrative via Lawrence), context-aware extraction, multi-model scoring, vector embeddings on insert
+- Content ingestion: dual-lens pipeline (foundation via Saga, narrative via Lena), context-aware extraction, multi-model scoring, vector embeddings on insert
 - Training engine: role-specific curriculum (hunter/gatherer/farmer/citizen), proficiency tracking with decay, refreshers, streaks, answer randomization, repetition avoidance
 - Citizen inspiration: 4-stage flow with 2x/week nudges, designed to inspire belief
 - Signal capture: background entity/action extraction from any Slack conversation via Spotter + Weaver, vector-based similar signal detection
@@ -65,7 +65,7 @@ mother-tree/
 │   ├── mothertree/            # Shared package (config, hasura, llm, ask)
 │   ├── ingestion/             # Content ingestion pipeline
 │   ├── bot/                   # Slack bot + unified conversation engine
-│   │   └── characters/        # Character ensemble (mother_tree, seth, lawrence, dispatcher, spotter, weaver)
+│   │   └── characters/        # Character ensemble (mother_tree, saga, lena, dispatcher, spotter, weaver)
 │   ├── training/              # Training engine (curriculum, operations, delivery, exercises)
 │   ├── reminders/             # Thread reminders
 │   ├── cli.py                 # CLI entry point
@@ -112,9 +112,9 @@ Methodology defined. Architecture running. [Implementation plan](docs/implementa
 
 **Phase 1 — Foundation: DONE.** PostgreSQL 17 + pgvector 0.8.2 (migrated from pgvecto.rs), PostGraphile GraphQL (migrated from Hasura), 11 tables, TLS, S3 backups, vector embeddings on all CI tables.
 
-**Phase 2 — Content ingestion: DONE.** Dual-lens extraction (foundation via Seth, narrative via Lawrence), context-aware with Qwen 3.5, multi-model scoring, pre-insert dedup, vector embeddings generated on insert, confidence scores in extraction prompts. 303 foundation records, narrative extraction active.
+**Phase 2 — Content ingestion: DONE.** Dual-lens extraction (foundation via Saga, narrative via Lena), context-aware with Qwen 3.5, multi-model scoring, pre-insert dedup, vector embeddings generated on insert, confidence scores in extraction prompts. 303 foundation records, narrative extraction active.
 
-**Phase 3 — Slack bot: DONE.** Character ensemble (Mother Tree, Seth, Lawrence, Spotter, Weaver, Dispatcher). Unified pipeline. Signal capture from any conversation. Training via DM.
+**Phase 3 — Slack bot: DONE.** Character ensemble (Mother Tree, Saga, Lena, Spotter, Weaver, Dispatcher). Unified pipeline. Signal capture from any conversation. Training via DM.
 
 **Phase 4 — Calendar: DONE.** iCal feed sync, meeting prep 2 days before, debrief prompt 3 days after.
 

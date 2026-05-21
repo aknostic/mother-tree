@@ -1,6 +1,8 @@
 # Marketing Framework
 
-## The foundation: Seth Godin's marketing structure
+## The foundation: Saga's positioning structure
+
+*See [docs/inspirations.md](../docs/inspirations.md) for the practitioners whose work informs Saga's craft.*
 
 People don't buy products. They buy change — a story about who they'll become. The marketer's job isn't to change minds but to find people who already want to change and offer them a path.
 
@@ -63,7 +65,7 @@ The central intelligence organizes content by the role it plays in this framewor
 
 ### Foundation
 
-Who we are, what we promise, who we're for. This is Seth's domain — the change and the worldview.
+Who we are, what we promise, who we're for. This is Saga's domain — the change and the worldview.
 
 **Sources:** Marketing repository, aknostic.com.
 **Extracts:** Change statements, worldview records (beliefs, pains, readiness signals), personas, competitive positioning.

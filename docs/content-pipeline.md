@@ -49,7 +49,7 @@ A single page often contains both. A case study on aknostic.com states the chang
 
 The lenses are independent. You can run foundation once and narrative daily. You can run both on the same source or only one. The source keys use different prefixes (`foundation:` vs `narrative:`) so they never collide.
 
-## How the lenses map to Seth Godin's framework
+## How the lenses map to Saga's framework
 
 The pipeline directly implements the marketing framework described in `methodology/marketing-framework.md`:
 
@@ -90,7 +90,7 @@ The central intelligence organizes content by the role it plays:
 
 ### Foundation
 
-Who we are, what we promise, who we're for. This is Seth's domain — the change and the worldview.
+Who we are, what we promise, who we're for. This is Saga's domain — the change and the worldview.
 
 **Sources:** Marketing repository (all markdown files), aknostic.com (full sitemap).
 **Extracts:** Change statements, worldview records (beliefs, pains, readiness signals), personas, competitive positioning.
@@ -353,8 +353,8 @@ The training engine (`jobs/training/`) consumes the central intelligence to deli
     │  tables       ├────►│  Curriculum      ├────►│  Slack DM        │
     │              │     │  + Generator      │     │                  │
     ├──────────────┤     │                  │     │  • Instructions  │
-    │  Narrative    │     │  Seth (marketing)│     │  • Exercises     │
-    │  tables       ├────►│  Lawrence (sales)│     │  • Refreshers    │
+    │  Narrative    │     │Saga (positioning)│     │  • Exercises     │
+    │  tables       ├────►│  Lena (diagnosis)│     │  • Refreshers    │
     │              │     │  Mother Tree      │     │  • Progress      │
     └──────────────┘     └──────────────────┘     └──────────────────┘
 ```
@@ -365,7 +365,7 @@ The training engine (`jobs/training/`) consumes the central intelligence to deli
 - **Gatherer:** The Change → Signal Recognition → Delivery → Content Creation → Feedback
 - **Farmer:** The Platform → The Community → The Practice
 
-Each stage has 2-3 chapters. Each chapter specifies which trainer (Seth, Lawrence, or Mother Tree) teaches it and which CI tables provide source data. Stage 0 works with foundation data only; stage 1+ requires narrative insights.
+Each stage has 2-3 chapters. Each chapter specifies which trainer (Saga, Lena, or Mother Tree) teaches it and which CI tables provide source data. Stage 0 works with foundation data only; stage 1+ requires narrative insights.
 
 **Proficiency decay** — completed chapters decay over time if not practiced. When proficiency drops below threshold, the system delivers targeted refreshers instead of new material.
 
