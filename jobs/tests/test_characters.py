@@ -486,4 +486,4 @@ class TestPipelineIntegration:
         mock_chat.assert_called_once()
         # Verify Saga's identity is in the system prompt
         system_prompt = mock_chat.call_args[0][0][0]["content"]
-        assert "Saga" in system_prompt
+        assert "You are Saga" in system_prompt
