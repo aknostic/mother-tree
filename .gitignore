@@ -20,3 +20,6 @@ docs/papers/**/*.out
 docs/papers/**/*.toc
 docs/papers/**/body-raw.tex
 docs/papers/**/body.tex
+
+# Local test-data snapshots — generated per deployment, never committed
+test-data/*.json
