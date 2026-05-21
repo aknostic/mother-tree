@@ -2,124 +2,75 @@
 
 > *"A forest is much more than what you see." — Suzanne Simard*
 
-Mother Tree is a commercial intelligence platform for consultative sales teams. It combines a sales methodology (the Mycorrhizal Method) with an always-on intelligence layer that turns methodology into daily practice.
+Mother Tree is a commercial intelligence platform for consultative sales teams — methodology, training engine, and always-on intelligence layer in a single deployable system.
 
-Designed for relationship-driven, expertise-based businesses with small deal volume and long sales cycles — consultancies, advisory firms, specialized services — where the sales challenge is not volume but choreography: connecting warmth, expertise, and reputation into pipeline.
+## What is Mother Tree
 
-## How it works
+Mother Tree combines a sales methodology (the Mycorrhizal Method) with a pipeline of scheduled jobs that turns that methodology into daily practice. The framework is content-agnostic: Mother Tree defines the structure — what an insight looks like, how training progresses, what the sales choreography is. Your content sources (marketing site, git repository, case studies) provide the substance. Change the content sources, change what the platform knows.
 
-**Bring your own content.** Mother Tree defines the structure — what an insight looks like, how training works, what the sales choreography is. Your marketing repository, case studies, personas, and competitive positioning provide the substance. Change the content source, change the training.
+See [docs/methodology.md](docs/methodology.md) for the Mycorrhizal Method in full.
 
-**Two layers:**
-- **Always-on** (Kubernetes) — scheduled jobs extract content, deliver training, check for stale relationships, generate pipeline reviews. Calls European LLMs (Scaleway: Qwen 3.5, Mistral Small 3.2, Devstral 2, Llama 3.3, Gemma 3). Anthropic (Haiku/Sonnet) only for triage and arbitration — core pipeline runs without it.
-- **Interactive** — Slack bot as conversational participant (DMs and channels) + Claude Code skill queries via GraphQL. Character ensemble: Mother Tree (Librarian), [Saga](docs/inspirations.md) (positioning), [Lena](docs/inspirations.md) (consultative diagnosis), with invisible Spotter and Weaver for background intelligence.
+## Who is it for
 
-**V1 features:**
-- Content ingestion: dual-lens pipeline (foundation via Saga, narrative via Lena), context-aware extraction, multi-model scoring, vector embeddings on insert
-- Training engine: role-specific curriculum (hunter/gatherer/farmer/citizen), proficiency tracking with decay, refreshers, streaks, answer randomization, repetition avoidance
-- Citizen inspiration: 4-stage flow with 2x/week nudges, designed to inspire belief
-- Signal capture: background entity/action extraction from any Slack conversation via Spotter + Weaver, vector-based similar signal detection
-- Semantic search: pgvector cosine distance across all CI tables, cross-table briefings via CLI
-- Calendar integration: iCal feed sync, meeting prep 2 days before, debrief prompt 3 days after
-- Rhythm engine: stale relationship checks (daily), weekly pipeline review, monthly LLM-synthesized retrospective
-- Coming: signal scanner (RSS/news/job boards)
+Consultative sales teams running multi-quarter deals who want an always-on intelligence layer. The platform is built around four roles: **hunters** (commercial choreography), **gatherers** (signal and story capture from delivery), **farmers** (platform infrastructure), and **citizens** (inspired colleagues, not full participants). It works best for relationship-driven, expertise-based businesses — consultancies, advisory firms, specialized services — with small deal volume and long sales cycles, where the challenge is choreography, not volume.
 
-## Repository structure
+## Quick start
 
-```
-mother-tree/
-├── methodology/          # The Mycorrhizal Method (content-agnostic)
-│   ├── principles.md     # Five core beliefs
-│   ├── roles.md          # Hunters, gatherers, farmers
-│   ├── choreography.md   # Soil → Signal → Reframe → Diagnosis → Proposal → Sustain
-│   └── qualification.md  # Walk-away signals and the mutual respect gate
-│
-├── insights/             # Insight category schemas (content loaded from external sources)
-│   ├── README.md         # How the insight library works
-│   ├── lock-in-freedom.md
-│   ├── regulatory-pressure.md
-│   ├── capability-vs-dependency.md
-│   ├── cost-reality.md
-│   ├── developer-experience.md
-│   └── resilience-reliability.md
-│
-├── assessments/
-│   └── templates/        # Assessment frameworks (adapt to your domain)
-│       ├── lock-in-audit.md
-│       └── independence-assessment.md
-│
-├── patterns/             # Cross-engagement intelligence (accumulated over time)
-│
-├── briefings/            # Role-specific onboarding decks
-│   ├── hunter-briefing-deck.md
-│   ├── gatherer-briefing-deck.md
-│   └── farmer-briefing-deck.md
-│
-├── docs/
-│   ├── content-pipeline.md   # How external content sources feed into Mother Tree
-│   ├── slack-bot-commands.md  # How Mother Tree works in Slack
-│   └── superpowers/specs/
-│       └── 2026-03-17-mycorrhizal-method-design.md
-│
-├── jobs/                      # Python code — all runtime workloads
-│   ├── mothertree/            # Shared package (config, hasura, llm, ask)
-│   ├── ingestion/             # Content ingestion pipeline
-│   ├── bot/                   # Slack bot + unified conversation engine
-│   │   └── characters/        # Character ensemble (mother_tree, saga, lena, dispatcher, spotter, weaver)
-│   ├── training/              # Training engine (curriculum, operations, delivery, exercises)
-│   ├── reminders/             # Thread reminders
-│   ├── cli.py                 # CLI entry point
-│   ├── Dockerfile.bot         # Slack bot container
-│   └── Dockerfile.jobs        # CronJob container
-│
-├── deploy/                    # Kubernetes manifests (Flux CD)
-└── .gitlab-ci.yml             # CI: kaniko builds for bot + jobs images
+```bash
+# Start the full stack (Postgres, PostGraphile, bot, jobs)
+docker compose up
 ```
 
-**Git (this repo):** methodology, insight schemas, assessment templates, patterns, briefings — the framework.
+```bash
+# First ingest — extract foundation layer from your marketing site
+uv run python -m cli ingest foundation url https://your-marketing-site.example/sitemap.xml
 
-**PostgreSQL (PostGraphile GraphQL):** contacts, signals, interactions, insights (loaded from content sources), training state — the live data.
+# Dedup + synthesize the organization profile
+uv run python -m cli ingest consolidate
 
-**External content source (e.g., marketing repo):** buyer personas, case studies, reframes, competitive positioning — your specific commercial knowledge.
+# Enroll your first hunter
+uv run python -m cli train enroll hunter@example.com "Hunter Name" hunter
 
-## Platform stack
+# Full CLI reference
+uv run python -m cli --help
+```
 
-| Component | Purpose |
-|-----------|---------|
-| PostgreSQL 17 + pgvector 0.8.2 | Central data store with vector embeddings on all CI tables (cosine distance search) |
-| CloudNativePG | PostgreSQL lifecycle on Kubernetes |
-| PostGraphile | Auto-generated GraphQL API |
-| Kubernetes CronJobs | Scheduled intelligence (signal scanning, training delivery, pipeline reviews) |
-| Scaleway Generative APIs | Open-weight LLMs: Qwen 3.5 397B (generation/deep extraction), Mistral Small 3.2 (classification), Devstral 2 123B / Llama 3.3 70B / Gemma 3 27B (scoring), BGE Multilingual Gemma2 (embeddings) |
-| Anthropic (Haiku/Sonnet) | Triage coordination and arbitration for flagged content |
-| Slack bot | Conversational participant in all channels, training via DM, signal capture from conversation, thread memory, reminders |
-| Claude Code skill | Interactive queries using shared `ask` module — same personas as Slack bot |
+The Slack bot starts in CLI-only mode if no Slack credentials are provided — you can run ingestion, training enrollment, and briefings entirely from the command line without a Slack workspace.
 
-## Start here
+## Architecture
 
-| You are a... | Read this |
-|--------------|-----------|
-| Hunter | [Hunter briefing](briefings/hunter-briefing-deck.md), then [choreography](methodology/choreography.md) |
-| Gatherer | [Gatherer briefing](briefings/gatherer-briefing-deck.md) |
-| Farmer | [Farmer briefing](briefings/farmer-briefing-deck.md) |
-| Everyone | [Principles](methodology/principles.md) |
-| Integrating content | [Content pipeline](docs/content-pipeline.md) |
-| Slack bot | [How Mother Tree works](docs/slack-bot-commands.md) |
+Mother Tree runs as two coordinated layers.
 
-## Status (2026-04-01)
+### Always-on layer
 
-Methodology defined. Architecture running. [Implementation plan](docs/implementation-plan.md) tracks all phases.
+PostgreSQL 17 + pgvector + PostGraphile provide the data backbone. Kubernetes CronJobs handle ingestion (foundation and narrative extraction from your content sources), daily training delivery, weekly pipeline review, monthly LLM-synthesized retrospective, calendar prep and debrief, and signal capture from Slack conversations. Vector embeddings (BGE Multilingual Gemma2) on all intelligence tables drive context fetching, training source selection, and semantic search.
 
-**Phase 1 — Foundation: DONE.** PostgreSQL 17 + pgvector 0.8.2 (migrated from pgvecto.rs), PostGraphile GraphQL (migrated from Hasura), 11 tables, TLS, S3 backups, vector embeddings on all CI tables.
+### Interactive layer
 
-**Phase 2 — Content ingestion: DONE.** Dual-lens extraction (foundation via Saga, narrative via Lena), context-aware with Qwen 3.5, multi-model scoring, pre-insert dedup, vector embeddings generated on insert, confidence scores in extraction prompts. 303 foundation records, narrative extraction active.
+A Slack bot participates as a conversational member in any channel — capturing signals, delivering training via DM, responding to questions via `@mention`. Operators interact via CLI. A Claude Code skill also queries the platform via GraphQL, using the same data layer as the bot.
 
-**Phase 3 — Slack bot: DONE.** Character ensemble (Mother Tree, Saga, Lena, Spotter, Weaver, Dispatcher). Unified pipeline. Signal capture from any conversation. Training via DM.
+See [docs/methodology.md](docs/methodology.md) for how the methodology maps to the platform and [docs/inspirations.md](docs/inspirations.md) for the practitioner credits.
 
-**Phase 4 — Calendar: DONE.** iCal feed sync, meeting prep 2 days before, debrief prompt 3 days after.
+## Personas — Saga and Lena
 
-**Phase 5 — Training engine: DONE.** Role-specific curriculum (hunter/gatherer/farmer/citizen), exercise generation with answer randomization, proficiency decay + refreshers, streaks, citizen inspiration flow (4 stages, 2x/week), vector-driven source selection, repetition avoidance. CronJob deployed.
+Saga is a positioning strategist; Lena is a consultative diagnostician. They co-train hunters and respond to queries in their own voices. In Slack, reach them via `@mention` in any channel or `ask saga` / `ask lena` in a DM. They share the same underlying intelligence but bring distinct perspectives — Saga grounds training in positioning and differentiation, Lena in conversation structure and stakeholder diagnosis.
 
-**Phase 6 — Discipline: MOSTLY DONE.** Stale relationship checks (weekdays 08:00), weekly pipeline review (Mondays 08:00), monthly retrospective (1st of month 09:00, LLM-synthesized). Signal scanner not started.
+See [docs/inspirations.md](docs/inspirations.md) for the real practitioners whose work informs these archetypes.
 
-**Phase 7 — Claude Code skill: DONE.** `/mothertree` skill using shared `ask` module.
+## Models
+
+Mother Tree's model selection policy favors European open-source LLMs. The core pipeline runs on Scaleway: Qwen 3.5 397B for deep extraction and bot conversations, Mistral Small 3.2 for classification, and Devstral 2 123B / Llama 3.3 70B / Gemma 3 27B as independent scoring judges. Anthropic Claude (Haiku for triage, Sonnet for arbitration) is used only when the scoring judges disagree — the rest of the platform runs without it. Embeddings use BGE Multilingual Gemma2.
+
+See [docs/model-selection-policy.md](docs/model-selection-policy.md) for the full policy and selection rationale.
+
+## Production deployment
+
+[`deploy/`](deploy/) contains Kubernetes manifests targeting CloudNativePG (Postgres operator), PostGraphile, and Scaleway Inference. Any Kubernetes cluster running Postgres 17 with pgvector works — the manifests are a starting point, not a turnkey deployment. Example CronJob manifests in [`deploy/cronjobs.example/`](deploy/cronjobs.example/) show how to wire ingestion jobs to your content sources. Mother Tree ships with no customer content, ingestion sources, or organizational configuration — you fork and adapt for your environment.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
