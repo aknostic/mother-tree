@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: foundation-ingest-marketing
+  name: narrative-ingest-coe
   namespace: mother-tree
 spec:
-  schedule: "0 2 * * 0" # Weekly Sunday 02:00
+  schedule: "0 2 * * *" # Daily 02:00
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
@@ -14,26 +14,13 @@ spec:
       backoffLimit: 1
       template:
         spec:
-          initContainers:
-            - name: clone-repo
-              image: alpine/git
-              command: ["/bin/sh", "-c"]
-              args: ["git clone --depth 1 https://gitlab+deploy-token-40:${TOKEN}@gitlab.aknostic.com/aknostic/marketing.git /data/marketing"]
-              env:
-                - name: TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: gitlab-deploy-token
-                      key: token
-              volumeMounts:
-                - name: repo
-                  mountPath: /data
           imagePullSecrets:
             - name: gitlab-registry
           containers:
             - name: ingest
-              image: registry.gitlab.aknostic.com/aknostic/mother-tree/jobs:20260511125512-724a4af3 # {"$imagepolicy": "mother-tree:jobs"}
-              args: ["ingest", "foundation", "repo", "/data/marketing"]
+              # TODO: replace <your-org> with your container registry path before deploying
+              image: ghcr.io/<your-org>/mother-tree-jobs:latest
+              args: ["ingest", "narrative", "sitemap", "https://clouds-of-europe.eu/sitemap.xml"]
               env:
                 - name: HASURA_URL
                   value: "http://graphql:5000/graphql"
@@ -52,15 +39,7 @@ spec:
                     secretKeyRef:
                       name: anthropic-api
                       key: api-key
-                - name: ORGANIZATION_NAME
-                  value: "Aknostic"
-              volumeMounts:
-                - name: repo
-                  mountPath: /data
               resources:
                 requests: {cpu: 100m, memory: 256Mi}
                 limits: {cpu: "1", memory: 512Mi}
-          volumes:
-            - name: repo
-              emptyDir: {}
           restartPolicy: Never

@@ -26,17 +26,16 @@ resources:
   - slack-bot/deployment.yaml
 
   # CronJobs
-  - cronjobs/foundation-ingest-marketing.yaml
-  - cronjobs/narrative-ingest-marketing.yaml
-  - cronjobs/foundation-ingest-site.yaml
-  - cronjobs/narrative-ingest-coe.yaml
-  - cronjobs/narrative-ingest-site.yaml
   - cronjobs/training-deliver.yaml
   - cronjobs/discipline-weekly-review.yaml
   - cronjobs/discipline-monthly-retro.yaml
   - cronjobs/discipline-calendar-sync.yaml
   - cronjobs/discipline-qbr-review.yaml
   - cronjobs/pulse-scan.yaml
+
+  # Content-source CronJobs are samples — copy from deploy/cronjobs.example/,
+  # drop the .example suffix, edit the source URL and registry, then add the
+  # filename here.
 
   # Image automation — auto-update tags when CI pushes new images
   - image-automation/image-repositories.yaml

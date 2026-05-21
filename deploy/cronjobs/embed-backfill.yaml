@@ -12,7 +12,8 @@ spec:
         - name: gitlab-registry
       containers:
         - name: embed-backfill
-          image: registry.gitlab.aknostic.com/aknostic/mother-tree/jobs:20260401121630-80b9da3a
+          # TODO: replace <your-org> with your container registry path before deploying
+          image: ghcr.io/<your-org>/mother-tree-jobs:latest
           args: ["embed", "backfill"]
           env:
             - name: HASURA_URL
