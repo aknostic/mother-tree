@@ -1,0 +1,80 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install ruff
+        run: pip install ruff
+      - name: Run ruff
+        run: ruff check .
+        working-directory: ./jobs
+
+  pytest:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: mothertree
+          POSTGRES_PASSWORD: mothertree
+          POSTGRES_DB: mothertree
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U mothertree"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://mothertree:mothertree@localhost:5432/mothertree
+      HASURA_URL: http://localhost:5000/graphql
+      HASURA_ADMIN_SECRET: ""
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install postgres client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Apply schema
+        run: |
+          PGPASSWORD=mothertree psql -h localhost -U mothertree -d mothertree -f deploy/database/00-init-functions.sql
+          PGPASSWORD=mothertree psql -h localhost -U mothertree -d mothertree -f deploy/database/schema.sql
+
+      - name: Start PostGraphile
+        run: |
+          cd deploy/graphql
+          npm install --production
+          node server.js &
+          sleep 5
+        env:
+          DATABASE_URL: postgresql://mothertree:mothertree@localhost:5432/mothertree
+          PORT: "5000"
+
+      - name: Smoke-test GraphQL endpoint
+        run: |
+          curl -sf -X POST http://localhost:5000/graphql \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ __type(name:\"User\") { name } }"}' \
+            | grep -q '"name":"User"'
+
+      - name: Install Python deps
+        run: pip install -r jobs/requirements.txt pytest
+
+      - name: Run pytest
+        run: pytest jobs/tests/

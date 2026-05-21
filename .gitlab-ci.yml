@@ -1,3 +1,7 @@
+# This pipeline targets the Aknostic GitLab instance — not used by GitHub Actions.
+# See .github/workflows/ for the OSS upstream's CI configuration.
+# OSS adopters can safely delete this file if they don't deploy via GitLab CI.
+
 stages:
   - test
   - build
