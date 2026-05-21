@@ -847,13 +847,13 @@ def _get_response(routing: dict, history: list, user_name: str, participant_coun
                                        active_conversation=active_conversation)
 
         if character == "seth":
-            from bot.characters.seth import respond
+            from bot.characters.saga import respond
             return respond(question=clean_text, history=history,
                            user_name=user_name, participant_count=participant_count,
                            annotation=annotation, on_chunk=on_chunk)
 
         if character == "lawrence":
-            from bot.characters.lawrence import respond
+            from bot.characters.lena import respond
             return respond(question=clean_text, history=history,
                            user_name=user_name, participant_count=participant_count,
                            annotation=annotation, on_chunk=on_chunk)
@@ -934,11 +934,11 @@ def _trainer_character_response(text: str, history: list, user_name: str,
     if annotation and annotation.get("trainer"):
         trainer = annotation["trainer"]
     if trainer == "lawrence":
-        from bot.characters.lawrence import respond
+        from bot.characters.lena import respond
     elif trainer == "mother_tree":
         from bot.characters.mother_tree import respond
     else:
-        from bot.characters.seth import respond
+        from bot.characters.saga import respond
     return respond(question=text, history=history,
                    user_name=user_name, participant_count=participant_count,
                    annotation=annotation)

@@ -75,10 +75,10 @@ def main():
         user_name = os.environ.get("USER", "you")
         # Route through character modules — same code as Slack bot
         if persona == "seth":
-            from bot.characters.seth import respond
+            from bot.characters.saga import respond
             print(respond(question=question, history=[], user_name=user_name))
         elif persona == "lawrence":
-            from bot.characters.lawrence import respond
+            from bot.characters.lena import respond
             print(respond(question=question, history=[], user_name=user_name))
         elif persona == "trainer":
             from mothertree.ask import ask
