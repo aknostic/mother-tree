@@ -1,0 +1,7 @@
+# This file is not deployed — it documents the shared env pattern for CronJobs.
+# Each CronJob uses these env vars:
+#
+# HASURA_URL: http://graphql:5000/graphql
+# HASURA_ADMIN_SECRET: from secret hasura-admin-secret
+# SCALEWAY_AI_API_KEY: from secret scaleway-ai
+# SLACK_BOT_TOKEN: from secret slack-credentials (for jobs that post to Slack)

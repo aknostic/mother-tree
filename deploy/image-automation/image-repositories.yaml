@@ -1,0 +1,32 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: slack-bot
+  namespace: mother-tree
+spec:
+  image: registry.gitlab.aknostic.com/aknostic/mother-tree/slack-bot
+  interval: 1m
+  secretRef:
+    name: gitlab-registry
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: jobs
+  namespace: mother-tree
+spec:
+  image: registry.gitlab.aknostic.com/aknostic/mother-tree/jobs
+  interval: 1m
+  secretRef:
+    name: gitlab-registry
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: graphql
+  namespace: mother-tree
+spec:
+  image: registry.gitlab.aknostic.com/aknostic/mother-tree/graphql
+  interval: 1m
+  secretRef:
+    name: gitlab-registry

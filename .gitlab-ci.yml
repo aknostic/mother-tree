@@ -1,0 +1,178 @@
+stages:
+  - test
+  - build
+  - scan
+
+variables:
+  REGISTRY: registry.gitlab.aknostic.com/aknostic/mother-tree
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip-cache"
+
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /^flux:/
+      when: never
+    - when: always
+
+# ---------------------------------------------------------------------------
+# Test stage — code quality, security, tests. Always runs.
+# ---------------------------------------------------------------------------
+
+lint:
+  stage: test
+  image: python:3.12-slim
+  cache:
+    key: pip
+    paths:
+      - .pip-cache/
+  before_script:
+    - cd jobs
+    - pip install --quiet ruff
+  script:
+    - ruff check .
+  interruptible: true
+
+security:
+  stage: test
+  image: python:3.12-slim
+  cache:
+    key: pip
+    paths:
+      - .pip-cache/
+  before_script:
+    - cd jobs
+    - pip install --quiet bandit
+  script:
+    - bandit -r mothertree/ bot/ ingestion/ training/ reminders/ -q -ll
+  interruptible: true
+
+secret-scan:
+  stage: test
+  image:
+    name: ghcr.io/trufflesecurity/trufflehog:latest
+    entrypoint: [""]
+  script:
+    - trufflehog git file://. --only-verified --fail
+  interruptible: true
+
+test:
+  stage: test
+  image: python:3.12-slim
+  cache:
+    key: pip
+    paths:
+      - .pip-cache/
+  before_script:
+    - cd jobs
+    - pip install --quiet -r requirements.txt pytest
+  script:
+    - python -m pytest tests/ -v
+  interruptible: true
+
+# ---------------------------------------------------------------------------
+# Build stage — only after all tests pass
+# ---------------------------------------------------------------------------
+
+build-slack-bot:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/jobs"
+      --dockerfile "${CI_PROJECT_DIR}/jobs/Dockerfile.bot"
+      --destination "${REGISTRY}/slack-bot:${CI_COMMIT_SHORT_SHA}"
+      --destination "${REGISTRY}/slack-bot:latest"
+      --destination "${REGISTRY}/slack-bot:$(date +%Y%m%d%H%M%S)-${CI_COMMIT_SHORT_SHA}"
+
+build-jobs:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/jobs"
+      --dockerfile "${CI_PROJECT_DIR}/jobs/Dockerfile.jobs"
+      --destination "${REGISTRY}/jobs:${CI_COMMIT_SHORT_SHA}"
+      --destination "${REGISTRY}/jobs:latest"
+      --destination "${REGISTRY}/jobs:$(date +%Y%m%d%H%M%S)-${CI_COMMIT_SHORT_SHA}"
+
+build-graphql:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/deploy/graphql"
+      --dockerfile "${CI_PROJECT_DIR}/deploy/graphql/Dockerfile"
+      --destination "${REGISTRY}/graphql:${CI_COMMIT_SHORT_SHA}"
+      --destination "${REGISTRY}/graphql:latest"
+      --destination "${REGISTRY}/graphql:$(date +%Y%m%d%H%M%S)-${CI_COMMIT_SHORT_SHA}"
+
+# ---------------------------------------------------------------------------
+# Scan stage — scan the built images
+# ---------------------------------------------------------------------------
+
+scan-slack-bot:
+  stage: scan
+  image:
+    name: ghcr.io/aquasecurity/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy image --severity HIGH,CRITICAL
+      --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}"
+      "${REGISTRY}/slack-bot:${CI_COMMIT_SHORT_SHA}"
+  allow_failure: true
+
+scan-jobs:
+  stage: scan
+  image:
+    name: ghcr.io/aquasecurity/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy image --severity HIGH,CRITICAL
+      --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}"
+      "${REGISTRY}/jobs:${CI_COMMIT_SHORT_SHA}"
+  allow_failure: true
+
+scan-graphql:
+  stage: scan
+  image:
+    name: ghcr.io/aquasecurity/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy image --severity HIGH,CRITICAL
+      --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}"
+      "${REGISTRY}/graphql:${CI_COMMIT_SHORT_SHA}"
+  allow_failure: true
+
+sbom:
+  stage: scan
+  image: python:3.12-slim
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq curl > /dev/null
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - echo "${CI_REGISTRY_PASSWORD}" | syft login "${CI_REGISTRY}" -u "${CI_REGISTRY_USER}" --password-stdin
+  script:
+    - syft "${REGISTRY}/slack-bot:${CI_COMMIT_SHORT_SHA}"
+      -o spdx-json > sbom-slack-bot.json
+    - syft "${REGISTRY}/jobs:${CI_COMMIT_SHORT_SHA}"
+      -o spdx-json > sbom-jobs.json
+  artifacts:
+    paths:
+      - sbom-*.json
+    expire_in: 30 days
+  allow_failure: true

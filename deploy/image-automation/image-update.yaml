@@ -1,0 +1,25 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: mother-tree
+  namespace: mother-tree
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: mother-tree
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: Mother Tree Flux
+        email: flux@mothertree.aknostic.com
+      messageTemplate: 'flux: update images to {{range .Changed.Changes}}{{.NewValue}}{{end}}'
+    push:
+      branch: main
+  update:
+    path: ./deploy
+    strategy: Setters

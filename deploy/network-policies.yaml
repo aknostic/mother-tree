@@ -1,0 +1,284 @@
+# Default deny all traffic, then allow only what's needed.
+# Groupware guidance: also allow ingress from cnpg-system (DB operator) and monitoring (Alloy).
+
+# --- Default deny ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: mother-tree
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# --- GraphQL: accept from slack-bot, jobs, cnpg-system, monitoring, envoy gateway ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-graphql
+  namespace: mother-tree
+spec:
+  podSelector:
+    matchLabels:
+      app: graphql
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: slack-bot
+        - podSelector: {}  # any job pod in namespace
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+      ports:
+        - port: 5000
+  egress:
+    # GraphQL → PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: mother-tree-db
+      ports:
+        - port: 5432
+    # DNS
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+---
+# --- PostgreSQL: accept from GraphQL, cnpg-system, monitoring ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-postgres
+  namespace: mother-tree
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: mother-tree-db
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # GraphQL → PostgreSQL
+    - from:
+        - podSelector:
+            matchLabels:
+              app: graphql
+      ports:
+        - port: 5432
+    # CNPG operator → instance manager + metrics + replication
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+      ports:
+        - port: 5432
+        - port: 8000
+        - port: 9187
+    # Monitoring → metrics
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9187
+    # Replication between DB pods
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: mother-tree-db
+      ports:
+        - port: 5432
+  egress:
+    # Replication between DB pods
+    - to:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: mother-tree-db
+      ports:
+        - port: 5432
+    # Backups → S3
+    - to: []
+      ports:
+        - port: 443
+    # DNS
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+---
+# --- Slack bot: GraphQL + external APIs ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-slack-bot
+  namespace: mother-tree
+spec:
+  podSelector:
+    matchLabels:
+      app: slack-bot
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Monitoring scraping
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+  egress:
+    # → GraphQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app: graphql
+      ports:
+        - port: 5000
+    # → External: Slack API, Scaleway AI, websites for URL fetching
+    - to: []
+      ports:
+        - port: 443
+        - port: 80
+    # DNS
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+---
+# --- Jobs (CronJobs): GraphQL + external APIs ---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-jobs
+  namespace: mother-tree
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: NotIn
+        values: [graphql, slack-bot]
+      - key: cnpg.io/cluster
+        operator: DoesNotExist
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+  egress:
+    # → GraphQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app: graphql
+      ports:
+        - port: 5000
+    # → External: Scaleway AI, GitLab, sitemaps
+    - to: []
+      ports:
+        - port: 443
+        - port: 80
+    # DNS
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+---
+# --- Cilium-specific: kube-apiserver egress ---
+# Standard K8s NetworkPolicy port-based egress can't target Cilium's
+# kube-apiserver reserved identity (Cilium evaluates policy after
+# eBPF translates kubernetes.default ClusterIP to the apiserver
+# backend). Without these CiliumNetworkPolicies, pods that need the
+# K8s API fail on cold start — which is exactly how CNPG's instance-
+# manager fell over during the 2026-05-16 node pool migration.
+#
+# The DB rule is the load-bearing one (CNPG needs apiserver access).
+# The graphql/slack-bot/jobs rules are defensive against future
+# additions that pick up a K8s client library.
+
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-postgres-apiserver
+  namespace: mother-tree
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: mother-tree-db
+  egress:
+    - toEntities:
+        - kube-apiserver
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-graphql-apiserver
+  namespace: mother-tree
+spec:
+  endpointSelector:
+    matchLabels:
+      app: graphql
+  egress:
+    - toEntities:
+        - kube-apiserver
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-slack-bot-apiserver
+  namespace: mother-tree
+spec:
+  endpointSelector:
+    matchLabels:
+      app: slack-bot
+  egress:
+    - toEntities:
+        - kube-apiserver
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-jobs-apiserver
+  namespace: mother-tree
+spec:
+  endpointSelector:
+    matchExpressions:
+      - key: app
+        operator: NotIn
+        values: [graphql, slack-bot]
+      - key: cnpg.io/cluster
+        operator: DoesNotExist
+  egress:
+    - toEntities:
+        - kube-apiserver

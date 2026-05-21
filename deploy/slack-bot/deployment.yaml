@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-bot
+  namespace: mother-tree
+  labels:
+    app: slack-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slack-bot
+  template:
+    metadata:
+      labels:
+        app: slack-bot
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - name: slack-bot
+          image: registry.gitlab.aknostic.com/aknostic/mother-tree/slack-bot:20260511125512-724a4af3 # {"$imagepolicy": "mother-tree:slack-bot"}
+          imagePullPolicy: Always
+          env:
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slack-credentials
+                  key: bot-token
+            - name: SLACK_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slack-credentials
+                  key: app-token
+            - name: SLACK_SIGNALS_CHANNEL
+              value: "signals"
+            - name: HASURA_URL
+              value: "http://graphql:5000/graphql"
+            - name: HASURA_ADMIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hasura-admin-secret
+                  key: admin-secret
+            - name: SCALEWAY_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scaleway-ai
+                  key: secret-key
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: anthropic-api
+                  key: api-key
+            - name: ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: slack-credentials
+                  key: admin-email
+            - name: ORGANIZATION_NAME
+              value: "Aknostic"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

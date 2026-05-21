@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql
+  namespace: mother-tree
+  labels:
+    app: graphql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphql
+  template:
+    metadata:
+      labels:
+        app: graphql
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - name: graphql
+          image: registry.gitlab.aknostic.com/aknostic/mother-tree/graphql:20260511125513-724a4af3 # {"$imagepolicy": "mother-tree:graphql"}
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mother-tree-db-app
+                  key: uri
+            - name: ADMIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hasura-admin-secret
+                  key: admin-secret
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30

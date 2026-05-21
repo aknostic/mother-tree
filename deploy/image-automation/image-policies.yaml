@@ -1,0 +1,44 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: slack-bot
+  namespace: mother-tree
+spec:
+  imageRepositoryRef:
+    name: slack-bot
+  filterTags:
+    pattern: '^(?P<ts>\d{14})-[a-f0-9]{8}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: jobs
+  namespace: mother-tree
+spec:
+  imageRepositoryRef:
+    name: jobs
+  filterTags:
+    pattern: '^(?P<ts>\d{14})-[a-f0-9]{8}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: graphql
+  namespace: mother-tree
+spec:
+  imageRepositoryRef:
+    name: graphql
+  filterTags:
+    pattern: '^(?P<ts>\d{14})-[a-f0-9]{8}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc

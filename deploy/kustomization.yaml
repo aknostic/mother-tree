@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Namespace managed by groupware (labels, HTTPRoute, TLS)
+# We only deploy workloads into it
+
+resources:
+  # Secrets
+  - base/scaleway-ai-secret.yaml
+  - base/anthropic-secret.yaml
+  - database/backup-secret.yaml
+  - hasura/admin-secret.yaml
+  - slack-bot/slack-credentials-secret.yaml
+  - secrets/registry-secret.yaml
+  - secrets/gitlab-deploy-token.yaml
+
+  # Network
+  - network-policies.yaml
+
+  # Database
+  - database/cluster.yaml
+
+  # Services
+  - graphql/deployment.yaml
+  - graphql/service.yaml
+  - slack-bot/deployment.yaml
+
+  # CronJobs
+  - cronjobs/foundation-ingest-marketing.yaml
+  - cronjobs/narrative-ingest-marketing.yaml
+  - cronjobs/foundation-ingest-site.yaml
+  - cronjobs/narrative-ingest-coe.yaml
+  - cronjobs/narrative-ingest-site.yaml
+  - cronjobs/training-deliver.yaml
+  - cronjobs/discipline-weekly-review.yaml
+  - cronjobs/discipline-monthly-retro.yaml
+  - cronjobs/discipline-calendar-sync.yaml
+  - cronjobs/discipline-qbr-review.yaml
+  - cronjobs/pulse-scan.yaml
+
+  # Image automation — auto-update tags when CI pushes new images
+  - image-automation/image-repositories.yaml
+  - image-automation/image-policies.yaml
+  - image-automation/image-update.yaml
+
+# TODO: Create own SOPS age keypair instead of sharing groupware team's key

@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: deploy/.*\.yaml$
+    encrypted_regex: "^(data|stringData)$"
+    age: age1ny5rpz82l25pxw3esxrv6e2g5wy3j09uwgmwu6ygh6q9k6jajp3srl0ru5

@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: embed-backfill
+  namespace: mother-tree
+spec:
+  ttlSecondsAfterFinished: 7200
+  backoffLimit: 1
+  template:
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - name: embed-backfill
+          image: registry.gitlab.aknostic.com/aknostic/mother-tree/jobs:20260401121630-80b9da3a
+          args: ["embed", "backfill"]
+          env:
+            - name: HASURA_URL
+              value: "http://graphql:5000/graphql"
+            - name: HASURA_ADMIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hasura-admin-secret
+                  key: admin-secret
+            - name: SCALEWAY_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scaleway-ai
+                  key: secret-key
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+      restartPolicy: Never

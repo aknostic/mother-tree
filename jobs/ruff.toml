@@ -1,0 +1,25 @@
+target-version = "py312"
+line-length = 120
+
+[lint]
+select = [
+    "F",     # pyflakes — unused imports, undefined names
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "I",     # isort — import ordering
+    "UP",    # pyupgrade — modernize syntax
+    "B",     # flake8-bugbear — common bugs
+    "S",     # flake8-bandit — security
+    "T20",   # flake8-print — no print() in production code
+]
+ignore = [
+    "T201",  # allow print() — CLI tool uses print for output
+    "S101",  # allow assert — used in tests
+    "S110",  # allow try/except/pass — used for optional Slack API calls
+    "E501",  # line length handled by formatter
+    "E402",  # allow late imports in test files
+    "B905",  # zip strict= not needed for our use cases
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["S"]  # security rules too noisy in test files

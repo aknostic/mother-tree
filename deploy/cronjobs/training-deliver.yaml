@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: training-deliver
+  namespace: mother-tree
+spec:
+  schedule: "0 7 * * 1-5" # 07:00 UTC = 08:00 CET weekdays
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 7200
+      backoffLimit: 1
+      template:
+        spec:
+          imagePullSecrets:
+            - name: gitlab-registry
+          containers:
+            - name: training-deliver
+              image: registry.gitlab.aknostic.com/aknostic/mother-tree/jobs:20260511125512-724a4af3 # {"$imagepolicy": "mother-tree:jobs"}
+              args: ["train", "deliver"]
+              env:
+                - name: HASURA_URL
+                  value: "http://graphql:5000/graphql"
+                - name: HASURA_ADMIN_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: hasura-admin-secret
+                      key: admin-secret
+                - name: SCALEWAY_AI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scaleway-ai
+                      key: secret-key
+                - name: ANTHROPIC_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: anthropic-api
+                      key: api-key
+                - name: SLACK_BOT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: slack-credentials
+                      key: bot-token
+              resources:
+                requests: {cpu: 50m, memory: 128Mi}
+                limits: {cpu: 500m, memory: 256Mi}
+          restartPolicy: Never

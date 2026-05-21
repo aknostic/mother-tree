@@ -1,0 +1,20 @@
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY mothertree/ mothertree/
+COPY bot/ bot/
+COPY ingestion/ ingestion/
+COPY training/ training/
+COPY pulse/ pulse/
+COPY reminders/ reminders/
+COPY discipline/ discipline/
+COPY cli.py .
+
+USER 1000:1000
+ENTRYPOINT ["python", "cli.py"]

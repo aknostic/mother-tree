@@ -1,0 +1,43 @@
+// Fig. 3 — Multi-judge scoring with thresholded escalation.
+// Cited in §4.
+
+digraph multijudge {
+  rankdir=TB;
+  fontname="Helvetica";
+  graph [fontsize=11, ranksep=0.45, nodesep=0.3, pad=0.2];
+  node [fontname="Helvetica", fontsize=10, style="rounded,filled", shape=box, fillcolor="#fafafa"];
+  edge [fontname="Helvetica", fontsize=9, color=gray40];
+
+  candidate [label="Candidate insight\n(narrative-ingest)", fillcolor="#fff3e0"];
+
+  judge1 [label="Devstral 2 123B"];
+  judge2 [label="Llama 3.3 70B"];
+  judge3 [label="Gemma 3 27B"];
+
+  decision [label="aggregate", shape=diamond, fillcolor="#fafafa"];
+
+  accept [label="auto-accept\nmean ≥ 0.7", fillcolor="#e8f5e9"];
+  reject [label="drop\nmean ≤ 0.4", fillcolor="#ffebee"];
+  triage [label="Haiku 4.5\ntriage\n(spread > 0.3)", fillcolor="#fff3e0"];
+
+  arbitrate [label="Sonnet 4.6\narbitrate", fillcolor="#fff3e0"];
+  human [label="human reviewer\n(#mt-review)"];
+
+  candidate -> judge1;
+  candidate -> judge2;
+  candidate -> judge3;
+
+  judge1 -> decision;
+  judge2 -> decision;
+  judge3 -> decision;
+
+  decision -> accept;
+  decision -> reject;
+  decision -> triage;
+
+  triage -> arbitrate [color="#c62828"];
+  triage -> human;
+
+  {rank=same; judge1; judge2; judge3}
+  {rank=same; accept; reject; triage}
+}

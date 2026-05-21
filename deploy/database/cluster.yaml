@@ -1,0 +1,33 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mother-tree-db
+  namespace: mother-tree
+spec:
+  instances: 1
+
+  # PostgreSQL 17 with pgvector (official CNPG image)
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  bootstrap:
+    initdb:
+      database: mothertree
+      owner: mothertree
+      postInitTemplateSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+
+  storage:
+    size: 5Gi
+
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://groupware-mother-tree-backups/
+      endpointURL: https://s3.fr-par.scw.cloud
+      s3Credentials:
+        accessKeyId:
+          name: mother-tree-backup-s3
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: mother-tree-backup-s3
+          key: SECRET_ACCESS_KEY
+    retentionPolicy: "30d"
